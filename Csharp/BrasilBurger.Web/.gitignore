@@ -1,0 +1,6 @@
+# Ignorer les fichiers .NET
+**/bin/
+**/obj/
+
+# Ignorer VS Code
+.vscode/
