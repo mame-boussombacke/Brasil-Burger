@@ -1,24 +1,32 @@
-using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using BrasilBurger.Web.Models;
-
-namespace BrasilBurger.Web.Controllers;
+using Microsoft.Extensions.Configuration;
+using Npgsql;
 
 public class HomeController : Controller
 {
-    public IActionResult Index()
+    private readonly IConfiguration _configuration;
+
+    // Injection de IConfiguration via le constructeur
+    public HomeController(IConfiguration configuration)
     {
-        return View();
+        _configuration = configuration;
     }
 
-    public IActionResult Privacy()
+    public IActionResult TestDb()
     {
-        return View();
-    }
+        string connString = _configuration.GetConnectionString("DefaultConnection");
 
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
-    {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        try
+        {
+            using var conn = new NpgsqlConnection(connString);
+            conn.Open();
+            using var cmd = new NpgsqlCommand("SELECT NOW()", conn);
+            var result = cmd.ExecuteScalar();
+            return Content($"Connexion BD réussie ! Date du serveur : {result}");
+        }
+        catch (Exception ex)
+        {
+            return Content($"Erreur connexion BD : {ex.Message}");
+        }
     }
 }

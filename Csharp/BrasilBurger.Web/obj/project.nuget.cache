@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "4W4X7yZjrnA=",
+  "dgSpecHash": "GoUObDyVBVU=",
   "success": true,
   "projectFilePath": "C:\\Users\\hp\\Brasil-Burger\\Csharp\\BrasilBurger.Web\\BrasilBurger.Web.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\hp\\.nuget\\packages\\npgsql\\10.0.0\\npgsql.10.0.0.nupkg.sha512"
+  ],
   "logs": []
 }
