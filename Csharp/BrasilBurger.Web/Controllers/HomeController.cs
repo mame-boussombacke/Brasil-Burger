@@ -1,32 +1,25 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using Npgsql;
 
-public class HomeController : Controller
+namespace BrasilBurger.Web.Controllers
 {
-    private readonly IConfiguration _configuration;
-
-    // Injection de IConfiguration via le constructeur
-    public HomeController(IConfiguration configuration)
+    public class HomeController : Controller
     {
-        _configuration = configuration;
-    }
+        private readonly IConfiguration _configuration;
 
-    public IActionResult TestDb()
-    {
-        string connString = _configuration.GetConnectionString("DefaultConnection");
+        public HomeController(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
 
-        try
+        // Page d'accueil (facultative)
+                [HttpGet("/")]
+
+        public IActionResult Index()
         {
-            using var conn = new NpgsqlConnection(connString);
-            conn.Open();
-            using var cmd = new NpgsqlCommand("SELECT NOW()", conn);
-            var result = cmd.ExecuteScalar();
-            return Content($"Connexion BD réussie ! Date du serveur : {result}");
+            return Content("Bienvenue sur Brasil Burger !");
         }
-        catch (Exception ex)
-        {
-            return Content($"Erreur connexion BD : {ex.Message}");
-        }
+
+        
     }
 }
