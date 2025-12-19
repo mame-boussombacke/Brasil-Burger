@@ -1,6 +1,12 @@
-# Ignorer les fichiers .NET
-**/bin/
-**/obj/
-
-# Ignorer VS Code
-.vscode/
+"# .NET" 
+"**/bin/" 
+"**/obj/" 
+".vs/" 
+".vscode/" 
+"*.user" 
+"*.suo" 
+"*.exe" 
+"*.dll" 
+"*.pdb" 
+"appsettings*.json" 
+"**/bin/" 
