@@ -73,8 +73,8 @@ try
                     // Vérifier si les tables existent, sinon les créer
                     try
                     {
-                        var hasTables = dbContext.Database.GetService<Microsoft.EntityFrameworkCore.Storage.IRelationalDatabaseCreator>().HasTables();
-                        if (!hasTables)
+                        var databaseCreator = scope.ServiceProvider.GetService<Microsoft.EntityFrameworkCore.Storage.IRelationalDatabaseCreator>();
+                        if (databaseCreator != null && !databaseCreator.HasTables())
                         {
                             Console.WriteLine("🔄 Création des tables (aucune migration trouvée)...");
                             dbContext.Database.EnsureCreated();
