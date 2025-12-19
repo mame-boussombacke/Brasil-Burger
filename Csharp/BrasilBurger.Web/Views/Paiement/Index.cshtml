@@ -1,0 +1,125 @@
+@model BrasilBurger.Models.Commande
+@{
+    ViewData["Title"] = "Paiement - Brasil Burger";
+}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/css/site.css">
+    <link rel="stylesheet" href="~/css/paiement.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <a asp-controller="Commande" asp-action="Checkout" class="panier-nav">
+        ← Retour
+    </a>
+    
+    <!-- En-tête -->
+    <div class="page-header">
+        <h1 class="page-title">Brasil Burger</h1>
+        <p class="page-subtitle">PAIEMENT</p>
+    </div>
+    
+    <div class="paiement-container">
+        <!-- Titre -->
+        <div class="paiement-header">
+            <h2 class="paiement-title">Paiement</h2>
+            <p class="paiement-subtitle">Choisissez votre méthode de paiement</p>
+        </div>
+        
+        <!-- Récapitulatif commande -->
+        <div class="recap-commande">
+            <div class="recap-header">
+                <div class="commande-info">
+                    <h3>Commande #@Model.NumeroCommande</h3>
+                    <div class="commande-date">
+                        @Model.DateCommande.ToString("dd/MM/yyyy à HH:mm")
+                    </div>
+                </div>
+                
+                <div class="montant-total">
+                    <div class="total-label">Montant à payer</div>
+                    <div class="total-montant">@Model.Total.ToString("N0") FCFA</div>
+                </div>
+            </div>
+            
+            <!-- Total -->
+            <div class="recap-total">
+                <div class="total-row grand-total">
+                    <span class="total-label">Total</span>
+                    <span class="grand-total-amount">@Model.Total.ToString("N0") FCFA</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Méthodes de paiement -->
+        <div class="paiement-methods">
+            <h3 class="methods-title">Méthode de paiement</h3>
+            
+            <form asp-action="Payer" method="post" class="paiement-form">
+                <input type="hidden" name="commandeId" value="@Model.Id">
+                
+                <div class="methods-grid">
+                    <!-- Wave -->
+                    <label class="method-card" onclick="selectMethod('Wave')">
+                        <input type="radio" name="typePaiement" value="Wave" required>
+                        <div class="method-icon">🌊</div>
+                        <div class="method-name">Wave</div>
+                        <div class="method-description">
+                            Paiement mobile rapide
+                        </div>
+                    </label>
+                    
+                    <!-- Orange Money -->
+                    <label class="method-card" onclick="selectMethod('OM')">
+                        <input type="radio" name="typePaiement" value="OM" required>
+                        <div class="method-icon">🟠</div>
+                        <div class="method-name">Orange Money</div>
+                        <div class="method-description">
+                            Paiement via Orange Money
+                        </div>
+                    </label>
+                </div>
+                
+                <!-- Actions -->
+                <div class="paiement-actions">
+                    <a asp-controller="Commande" asp-action="Checkout" class="btn btn-back-commande">
+                        ← Modifier la commande
+                    </a>
+                    
+                    <button type="submit" class="btn btn-payer-now">
+                        Payer maintenant
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        function selectMethod(method) {
+            document.querySelectorAll('.method-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+        }
+        
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const method = document.querySelector('input[name="typePaiement"]:checked');
+            
+            if (!method) {
+                e.preventDefault();
+                alert('Veuillez sélectionner une méthode de paiement');
+                return;
+            }
+            
+            if (!confirm(`Confirmez-vous le paiement de ${@Model.Total} FCFA via ${method.value} ?`)) {
+                e.preventDefault();
+            }
+        });
+    </script>
+</body>
+</html>

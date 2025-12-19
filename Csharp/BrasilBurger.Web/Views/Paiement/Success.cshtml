@@ -1,0 +1,61 @@
+@model BrasilBurger.Models.Commande
+@{
+    ViewData["Title"] = "Paiement Réussi - Brasil Burger";
+}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/css/site.css">
+    <link rel="stylesheet" href="~/css/paiement.css">
+</head>
+<body>
+    <div class="confirmation-container">
+        <div class="confirmation-card">
+            <!-- Icône succès -->
+            <div class="confirmation-icon">✅</div>
+            
+            <!-- Titre -->
+            <h2 class="confirmation-title">Paiement Réussi !</h2>
+            
+            <!-- Message -->
+            <p class="confirmation-message">
+                Votre paiement a été effectué avec succès.<br>
+                Votre commande a été validée.
+            </p>
+            
+            <!-- Détails -->
+            <div class="confirmation-details">
+                <div class="detail-row">
+                    <span class="detail-label">N° Commande</span>
+                    <span class="detail-value">@Model.NumeroCommande</span>
+                </div>
+                
+                <div class="detail-row">
+                    <span class="detail-label">Montant payé</span>
+                    <span class="detail-value">@Model.Total.ToString("N0") FCFA</span>
+                </div>
+                
+                <div class="detail-row">
+                    <span class="detail-label">Méthode de paiement</span>
+                    <span class="detail-value">@Model.Paiement.Type</span>
+                </div>
+            </div>
+            
+            <!-- Actions -->
+            <div class="confirmation-actions">
+                <a asp-controller="Client" asp-action="Commandes" class="btn btn-suivre-commande">
+                    Suivre ma commande
+                </a>
+                
+                <a asp-controller="Home" asp-action="Catalogue" class="btn btn-nouvelle-commande">
+                    Nouvelle commande
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

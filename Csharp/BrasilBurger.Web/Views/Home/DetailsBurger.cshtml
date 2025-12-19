@@ -1,0 +1,143 @@
+@using BrasilBurger.Models
+@model BrasilBurger.Models.Burger
+@{
+    ViewData["Title"] = Model.Nom + " - Brasil Burger";
+    var complements = ViewBag.Complements as List<Complement>;
+    var nombrePanier = ViewBag.NombrePanier ?? 0;
+}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/css/site.css">
+    <link rel="stylesheet" href="~/css/home.css">
+</head>
+<body class="details-page">
+    <!-- Navigation panier -->
+    <a asp-controller="Commande" asp-action="Panier" class="panier-nav">
+        🛒 Panier <span class="panier-count">@nombrePanier</span>
+    </a>
+    
+    <!-- En-tête -->
+    <div class="page-header">
+        <h1 class="page-title">Brasil Burger</h1>
+    </div>
+    
+    <div class="details-container">
+        <!-- Carte burger -->
+        <div class="burger-card">
+            <!-- Image burger -->
+            <div class="burger-image-container">
+                <img src="@Model.ImageUrl" alt="@Model.Nom" class="burger-image">
+            </div>
+            
+            <!-- Info burger -->
+            <div class="burger-info">
+                <div class="burger-name">
+                    <span>@Model.Nom</span>
+                    <span class="burger-price">@Model.Prix.ToString("N0") FCFA</span>
+                </div>
+                
+                <div class="burger-description">
+                    <p>Burger de qualité supérieure préparé avec des ingrédients frais.</p>
+                </div>
+                
+                <!-- Compléments suggérés -->
+                @if (complements != null && complements.Any())
+                {
+                    <div class="complements-section">
+                        <h3 class="section-title">Compléments suggérés</h3>
+                        
+                        <div class="complements-grid" id="complementsContainer">
+                            @foreach (var complement in complements)
+                            {
+                                <div class="complement-card" onclick="toggleComplement(@complement.Id)">
+                                    <div class="complement-label">
+                                        <span class="complement-name">@complement.Nom</span>
+                                        <span class="complement-price">+@complement.Prix.ToString("N0") FCFA</span>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+                
+                <!-- Quantité -->
+                <div class="quantity-selector">
+                    <span style="font-weight: 600; margin-right: 1rem;">Quantité:</span>
+                    <button type="button" class="quantity-btn" onclick="changeQuantity(-1)">-</button>
+                    <input type="number" id="quantite" value="1" min="1" class="quantity-input" readonly>
+                    <button type="button" class="quantity-btn" onclick="changeQuantity(1)">+</button>
+                </div>
+                
+                <!-- Formulaire d'ajout au panier -->
+                <form asp-controller="Commande" asp-action="AjouterPanier" method="post" id="addToPanierForm">
+                    <input type="hidden" name="produitId" value="@Model.Id">
+                    <input type="hidden" name="typeProduit" value="burger">
+                    <input type="hidden" name="quantite" id="quantiteHidden" value="1">
+                    <div id="complementsHidden"></div>
+                    
+                    <div class="action-buttons">
+                        <a asp-action="Catalogue" asp-route-type="burgers" class="btn-back">
+                            ← Retour
+                        </a>
+                        <button type="submit" class="btn-add-panier">
+                            🛒 Ajouter au panier
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let quantite = 1;
+        let selectedComplements = new Set();
+        
+        function changeQuantity(delta) {
+            quantite += delta;
+            if (quantite < 1) quantite = 1;
+            document.getElementById('quantite').value = quantite;
+            document.getElementById('quantiteHidden').value = quantite;
+        }
+        
+        function toggleComplement(complementId) {
+            const card = document.querySelector(`[onclick="toggleComplement(${complementId})"]`);
+            
+            if (selectedComplements.has(complementId)) {
+                selectedComplements.delete(complementId);
+                card.classList.remove('selected');
+            } else {
+                selectedComplements.add(complementId);
+                card.classList.add('selected');
+            }
+            
+            updateHiddenComplements();
+        }
+        
+        function updateHiddenComplements() {
+            const container = document.getElementById('complementsHidden');
+            container.innerHTML = '';
+            
+            selectedComplements.forEach(complementId => {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'complementsIds';
+                input.value = complementId;
+                container.appendChild(input);
+            });
+        }
+        
+        document.getElementById('addToPanierForm').addEventListener('submit', function(e) {
+            const quantite = parseInt(document.getElementById('quantite').value);
+            if (quantite < 1) {
+                e.preventDefault();
+                alert('La quantité doit être au moins 1');
+            }
+        });
+    </script>
+</body>
+</html>

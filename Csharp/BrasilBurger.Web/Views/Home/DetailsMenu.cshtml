@@ -1,0 +1,107 @@
+@model BrasilBurger.Models.Menu
+@{
+    ViewData["Title"] = Model.Nom + " - Brasil Burger";
+    var nombrePanier = ViewBag.NombrePanier ?? 0;
+}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/css/site.css">
+    <link rel="stylesheet" href="~/css/home.css">
+</head>
+<body class="details-page">
+    <!-- Navigation panier -->
+    <a asp-controller="Commande" asp-action="Panier" class="panier-nav">
+        🛒 Panier <span class="panier-count">@nombrePanier</span>
+    </a>
+    
+    <!-- En-tête -->
+    <div class="page-header">
+        <h1 class="page-title">Brasil Burger</h1>
+        <p class="page-subtitle">MENU</p>
+    </div>
+    
+    <div class="details-container">
+        <!-- Carte menu -->
+        <div class="burger-card">
+            <!-- Image menu -->
+            <div class="burger-image-container">
+                <img src="@Model.ImageUrl" alt="@Model.Nom" class="burger-image">
+            </div>
+            
+            <!-- Info menu -->
+            <div class="burger-info">
+                <div class="burger-name">
+                    <span>@Model.Nom</span>
+                    <span class="burger-price">@Model.PrixTotal.ToString("N0") FCFA</span>
+                </div>
+                
+                <div class="burger-description">
+                    <p><strong>Menu complet comprenant :</strong></p>
+                    <ul style="padding-left: 20px; margin-top: 10px;">
+                        @if (Model.Burger != null)
+                        {
+                            <li><strong>Burger :</strong> @Model.Burger.Nom</li>
+                        }
+                        @if (Model.Frites != null)
+                        {
+                            <li><strong>Frites :</strong> @Model.Frites.Nom</li>
+                        }
+                        @if (Model.Boisson != null)
+                        {
+                            <li><strong>Boisson :</strong> @Model.Boisson.Nom</li>
+                        }
+                    </ul>
+                </div>
+                
+                <!-- Quantité -->
+                <div class="quantity-selector">
+                    <span style="font-weight: 600; margin-right: 1rem;">Quantité:</span>
+                    <button type="button" class="quantity-btn" onclick="changeQuantity(-1)">-</button>
+                    <input type="number" id="quantite" value="1" min="1" class="quantity-input" readonly>
+                    <button type="button" class="quantity-btn" onclick="changeQuantity(1)">+</button>
+                </div>
+                
+                <!-- Formulaire d'ajout au panier -->
+                <form asp-controller="Commande" asp-action="AjouterPanier" method="post" id="addToPanierForm">
+                    <input type="hidden" name="produitId" value="@Model.Id">
+                    <input type="hidden" name="typeProduit" value="menu">
+                    <input type="hidden" name="quantite" id="quantiteHidden" value="1">
+                    
+                    <div class="action-buttons">
+                        <a asp-action="Catalogue" asp-route-type="menus" class="btn-back">
+                            ← Retour aux menus
+                        </a>
+                        <button type="submit" class="btn-add-panier">
+                            🛒 Ajouter au panier
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let quantite = 1;
+        
+        function changeQuantity(delta) {
+            quantite += delta;
+            if (quantite < 1) quantite = 1;
+            document.getElementById('quantite').value = quantite;
+            document.getElementById('quantiteHidden').value = quantite;
+        }
+        
+        document.getElementById('addToPanierForm').addEventListener('submit', function(e) {
+            const quantite = parseInt(document.getElementById('quantite').value);
+            if (quantite < 1) {
+                e.preventDefault();
+                alert('La quantité doit être au moins 1');
+            }
+        });
+    </script>
+</body>
+</html>

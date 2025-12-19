@@ -1,0 +1,395 @@
+/* home.css - Styles spécifiques pour les pages Home */
+
+/* Page d'accueil */
+.home-page {
+    min-height: 100vh;
+    background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)),
+                url('https://images.unsplash.com/photo-1571091718767-18b5b1457add?ixlib=rb-4.0.3&auto=format&fit=crop&w=2072&q=80') center/cover;
+    color: var(--white);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.home-logo {
+    font-size: 4.5rem;
+    font-weight: 900;
+    color: var(--primary-color);
+    text-shadow: 3px 3px 0 rgba(0,0,0,0.5);
+    margin-bottom: 0.5rem;
+}
+
+.home-subtitle {
+    letter-spacing: 12px;
+    font-size: 1.4rem;
+    opacity: 0.9;
+    text-transform: uppercase;
+    margin-bottom: 3rem;
+}
+
+.welcome-container {
+    padding: 2rem;
+    max-width: 800px;
+}
+
+.welcome-title {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+    background: linear-gradient(45deg, var(--primary-color), #FF8C00);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.welcome-subtitle {
+    font-size: 1.5rem;
+    opacity: 0.9;
+    margin-bottom: 4rem;
+}
+
+.action-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.btn-continuer {
+    background: linear-gradient(45deg, var(--primary-color), var(--primary-dark));
+    color: var(--white);
+    padding: 18px 50px;
+    font-size: 1.4rem;
+    font-weight: bold;
+    border-radius: 50px;
+    width: 100%;
+    box-shadow: 0 4px 15px rgba(255, 107, 0, 0.3);
+}
+
+.btn-continuer:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(255, 107, 0, 0.4);
+}
+
+.btn-auth {
+    background: transparent;
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+    padding: 15px 40px;
+    font-size: 1.2rem;
+    border-radius: 50px;
+    width: 100%;
+}
+
+.btn-auth:hover {
+    background: var(--primary-color);
+    color: var(--white);
+}
+
+.auth-text {
+    margin-top: 2rem;
+    font-size: 1rem;
+    opacity: 0.8;
+}
+
+/* Catalogue */
+.categories-section {
+    background: var(--white);
+    padding: 2rem;
+    border-radius: var(--radius);
+    margin: 1rem auto;
+    max-width: 1200px;
+}
+
+.categories-title {
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    color: var(--text-dark);
+    text-align: center;
+}
+
+.categories-filter {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.cat-btn {
+    padding: 10px 25px;
+    border: 2px solid var(--primary-color);
+    background: transparent;
+    color: var(--primary-color);
+    border-radius: 25px;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.cat-btn:hover, .cat-btn.active {
+    background: var(--primary-color);
+    color: var(--white);
+    text-decoration: none;
+}
+
+/* Produits */
+.section-title {
+    font-size: 2rem;
+    color: var(--text-dark);
+    margin: 2rem 0 1.5rem;
+    padding-left: 1rem;
+    border-left: 5px solid var(--primary-color);
+}
+
+.product-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    overflow: hidden;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.product-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.product-info {
+    padding: 1.5rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.product-name {
+    font-size: 1.3rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    color: var(--text-dark);
+}
+
+.product-description {
+    color: var(--text-light);
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+    flex-grow: 1;
+}
+
+.product-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+}
+
+.product-price {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.btn-view-details {
+    background: var(--primary-color);
+    color: var(--white);
+    padding: 8px 20px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.btn-view-details:hover {
+    background: var(--primary-dark);
+    color: var(--white);
+    text-decoration: none;
+}
+
+/* Détails produit */
+.details-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.burger-image-container {
+    height: 400px;
+    overflow: hidden;
+    border-radius: var(--radius) var(--radius) 0 0;
+}
+
+.burger-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.burger-name {
+    font-size: 2.2rem;
+    color: var(--text-dark);
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.burger-price {
+    font-size: 2rem;
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+.burger-description {
+    color: var(--text-light);
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #eee;
+}
+
+/* Compléments */
+.complements-section {
+    margin: 2rem 0;
+}
+
+.complements-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.complement-card {
+    background: #f9f9f9;
+    border: 2px solid #eee;
+    border-radius: 10px;
+    padding: 1rem;
+    transition: all 0.3s;
+    cursor: pointer;
+}
+
+.complement-card:hover, .complement-card.selected {
+    border-color: var(--primary-color);
+    background: #fff8f0;
+}
+
+.complement-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    width: 100%;
+}
+
+.complement-name {
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+.complement-price {
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+/* Sélecteur quantité */
+.quantity-selector {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 2rem 0;
+}
+
+.quantity-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    color: var(--white);
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.quantity-input {
+    width: 60px;
+    text-align: center;
+    font-size: 1.2rem;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+/* Boutons d'action */
+.action-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.btn-add-panier {
+    flex: 1;
+    background: linear-gradient(45deg, var(--primary-color), var(--primary-dark));
+    color: var(--white);
+    border: none;
+    padding: 15px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.btn-add-panier:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 107, 0, 0.3);
+}
+
+.btn-back {
+    background: #6c757d;
+    color: var(--white);
+    padding: 15px 30px;
+    border-radius: 10px;
+    text-decoration: none;
+    text-align: center;
+}
+
+.btn-back:hover {
+    background: #5a6268;
+    color: var(--white);
+    text-decoration: none;
+}
+
+/* Responsive catalogue */
+@media (max-width: 768px) {
+    .home-logo {
+        font-size: 3rem;
+    }
+    
+    .home-subtitle {
+        letter-spacing: 6px;
+        font-size: 1rem;
+    }
+    
+    .welcome-title {
+        font-size: 2.5rem;
+    }
+    
+    .welcome-subtitle {
+        font-size: 1.2rem;
+    }
+    
+    .burger-name {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+    }
+}

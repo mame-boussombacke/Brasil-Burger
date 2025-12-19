@@ -1,0 +1,134 @@
+@model List<BrasilBurger.Models.Commande>
+@{
+    ViewData["Title"] = "Mes Commandes - Brasil Burger";
+    // Définir les constantes d'état localement dans la vue
+    var etatEnAttente = "EnAttente";
+    var etatValidee = "Validee";
+    var etatTerminee = "Terminee";
+    var etatAnnulee = "Annulee";
+}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/css/site.css">
+    <link rel="stylesheet" href="~/css/client.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <a asp-controller="Home" asp-action="Catalogue" class="panier-nav">
+        🏠 Catalogue
+    </a>
+    
+    <!-- En-tête -->
+    <div class="page-header">
+        <h1 class="page-title">Brasil Burger</h1>
+        <p class="page-subtitle">MES COMMANDES</p>
+    </div>
+    
+    <div class="commandes-container">
+        <!-- Titre -->
+        <div class="commandes-header">
+            <h2 class="commandes-title">Mes Commandes</h2>
+            <p class="commandes-subtitle">Suivez l'état de vos commandes</p>
+        </div>
+        
+        <!-- Liste des commandes -->
+        @if (Model.Any())
+        {
+            <div class="commandes-table">
+                <!-- En-tête -->
+                <div class="table-header">
+                    <div class="table-row">
+                        <div class="table-cell">N° Commande</div>
+                        <div class="table-cell">Date</div>
+                        <div class="table-cell">Montant</div>
+                        <div class="table-cell">État</div>
+                        <div class="table-cell">Actions</div>
+                    </div>
+                </div>
+                
+                <!-- Lignes -->
+                <div class="table-body">
+                    @foreach (var commande in Model)
+                    {
+                        <div class="table-row">
+                            <div class="table-cell">
+                                <strong>@commande.NumeroCommande</strong>
+                            </div>
+                            <div class="table-cell">
+                                @commande.DateCommande.ToString("dd/MM/yyyy HH:mm")
+                            </div>
+                            <div class="table-cell">
+                                @commande.Total.ToString("N0") FCFA
+                            </div>
+                            <div class="table-cell">
+                                @{
+                                    // Utiliser les constantes locales définies plus haut
+                                    var etatCommande = commande.Etat.ToString();
+                                }
+                                
+                                @if (etatCommande == etatEnAttente)
+                                {
+                                    <span class="badge badge-en-attente">En attente</span>
+                                }
+                                else if (etatCommande == etatValidee)
+                                {
+                                    <span class="badge badge-validee">Validée</span>
+                                }
+                                else if (etatCommande == etatTerminee)
+                                {
+                                    <span class="badge badge-terminee">Terminée</span>
+                                }
+                                else if (etatCommande == etatAnnulee)
+                                {
+                                    <span class="badge badge-annulee">Annulée</span>
+                                }
+                                else
+                                {
+                                    <span class="badge">@etatCommande</span>
+                                }
+                            </div>
+                            <div class="table-cell">
+                                @if (commande.Paiement == null && etatCommande != etatAnnulee)
+                                {
+                                    <a asp-controller="Paiement" asp-action="Index"
+                                    asp-route-commandeId="@commande.Id"
+                                    class="btn-action btn-payer">
+                                        Payer
+                                    </a>
+                                }
+                                <a asp-action="CommandeDetails" asp-route-id="@commande.Id" 
+                                class="btn-action btn-view">
+                                    Voir
+                                </a>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-5">
+                <div style="font-size: 5rem; color: #ddd; margin-bottom: 1rem;">📭</div>
+                <h3>Aucune commande</h3>
+                <p class="text-muted">Vous n'avez pas encore passé de commande.</p>
+                <a asp-controller="Home" asp-action="Catalogue" class="btn btn-primary mt-3">
+                    Voir le catalogue
+                </a>
+            </div>
+        }
+        
+        <!-- Navigation -->
+        <div class="text-center mt-4">
+            <a asp-controller="Home" asp-action="Catalogue" class="btn btn-outline">
+                ← Retour au catalogue
+            </a>
+        </div>
+    </div>
+</body>
+</html>

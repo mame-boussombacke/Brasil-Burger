@@ -1,0 +1,198 @@
+@model List<BrasilBurger.Models.PanierItem>
+@{
+    ViewData["Title"] = "Mon Panier - Brasil Burger";
+    var total = ViewBag.TotalPanier ?? 0;
+    var nombrePanier = ViewBag.NombrePanier ?? 0;
+}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/css/site.css">
+    <link rel="stylesheet" href="~/css/commande.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <a asp-controller="Home" asp-action="Catalogue" class="panier-nav">
+        🏠 Catalogue
+    </a>
+    
+    <!-- En-tête -->
+    <div class="page-header">
+        <h1 class="page-title">Brasil Burger</h1>
+        <p class="page-subtitle">MON PANIER</p>
+    </div>
+    
+    <div class="panier-container">
+        <!-- Titre -->
+        <div class="panier-header">
+            <h2 class="panier-title">Mon Panier</h2>
+            <p class="panier-subtitle">Vérifiez vos articles avant de commander</p>
+        </div>
+        
+        @if (Model != null && Model.Any())
+        {
+            <!-- Items du panier -->
+            <div class="panier-items">
+                @foreach (var item in Model)
+                {
+                    <div class="panier-item">
+                        <!-- Image -->
+                        @if (!string.IsNullOrEmpty(item.ImageUrl))
+                        {
+                            <img src="@item.ImageUrl" alt="@item.Nom" class="panier-item-image">
+                        }
+                        else
+                        {
+                            <div class="panier-item-image" style="background: #ddd; display: flex; align-items: center; justify-content: center;">
+                                <span>No image</span>
+                            </div>
+                        }
+                        
+                        <!-- Info -->
+                        <div class="panier-item-info">
+                            <div class="item-name">@item.Nom</div>
+                            @if (item.ComplementsIds != null && item.ComplementsIds.Any())
+                            {
+                                <small class="item-complements">Avec compléments</small>
+                            }
+                        </div>
+                        
+                        <!-- Prix unitaire -->
+                        <div class="item-price">
+                            @item.Prix.ToString("N0") FCFA
+                        </div>
+                        
+                        <!-- Quantité -->
+                        <div class="item-quantity">
+                            <form asp-action="UpdateQuantite" method="post" class="d-inline">
+                                <input type="hidden" name="produitId" value="@item.ProduitId">
+                                <input type="hidden" name="typeProduit" value="@item.TypeProduit">
+                                <button type="button" class="quantity-btn-small" 
+                                        onclick="changeQuantity(@item.ProduitId, '@item.TypeProduit', -1)">
+                                    -
+                                </button>
+                                <input type="number" name="quantite" value="@item.Quantite" 
+                                    class="quantity-input-small" min="1" readonly>
+                                <button type="button" class="quantity-btn-small" 
+                                        onclick="changeQuantity(@item.ProduitId, '@item.TypeProduit', 1)">
+                                    +
+                                </button>
+                            </form>
+                        </div>
+                        
+                        <!-- Total -->
+                        <div class="item-total">
+                            @((item.Prix * item.Quantite).ToString("N0")) FCFA
+                        </div>
+                        
+                        <!-- Supprimer -->
+                        <form asp-action="Supprimer" method="post">
+                            <input type="hidden" name="produitId" value="@item.ProduitId">
+                            <input type="hidden" name="typeProduit" value="@item.TypeProduit">
+                            <button type="submit" class="btn-remove" title="Supprimer">
+                                ×
+                            </button>
+                        </form>
+                    </div>
+                }
+            </div>
+            
+            <!-- Récapitulatif -->
+            <div class="panier-summary">
+                <h3 class="summary-title">Récapitulatif</h3>
+                
+                <div class="summary-row">
+                    <span class="summary-label">Sous-total</span>
+                    <span class="summary-value">@total.ToString("N0") FCFA</span>
+                </div>
+                
+                <div class="summary-row">
+                    <span class="summary-label">Livraison</span>
+                    <span class="summary-value">À calculer</span>
+                </div>
+                
+                <div class="summary-row">
+                    <span class="summary-label">Total</span>
+                    <span class="summary-total">@total.ToString("N0") FCFA</span>
+                </div>
+                
+                <!-- Actions -->
+                <div class="panier-actions">
+                    <form asp-action="ViderPanier" method="post">
+                        <button type="submit" class="btn btn-vider-panier">
+                            🗑️ Vider le panier
+                        </button>
+                    </form>
+                    
+                    @{
+                        var clientId = Context.Session.GetInt32("ClientId");
+                        if (clientId != null)
+                        {
+                            <a asp-action="Checkout" class="btn btn-commander">
+                                Commander maintenant →
+                            </a>
+                        }
+                        else
+                        {
+                            <a asp-controller="Client" asp-action="Login" class="btn btn-commander">
+                                Se connecter pour commander →
+                            </a>
+                        }
+                    }
+                </div>
+            </div>
+        }
+        else
+        {
+            <!-- Panier vide -->
+            <div class="text-center py-5">
+                <div style="font-size: 5rem; color: #ddd; margin-bottom: 1rem;">🛒</div>
+                <h3>Votre panier est vide</h3>
+                <p class="text-muted">Ajoutez des produits pour commencer vos achats.</p>
+                <a asp-controller="Home" asp-action="Catalogue" class="btn btn-primary mt-3">
+                    Voir le catalogue
+                </a>
+            </div>
+        }
+        
+        <!-- Navigation -->
+        <div class="text-center mt-4">
+            <a asp-controller="Home" asp-action="Catalogue" class="btn btn-outline">
+                ← Continuer mes achats
+            </a>
+        </div>
+    </div>
+    
+    <script>
+        function changeQuantity(produitId, typeProduit, delta) {
+            // Trouver le formulaire correspondant à cet item
+            const itemElement = document.querySelector(`.panier-item input[name="produitId"][value="${produitId}"]`).closest('.panier-item');
+            const form = itemElement.querySelector('form[asp-action="UpdateQuantite"]');
+            
+            if (!form) return;
+            
+            // Mettre à jour la quantité
+            const quantiteInput = form.querySelector('input[name="quantite"]');
+            let currentQuantite = parseInt(quantiteInput.value || '1');
+            currentQuantite += delta;
+            
+            if (currentQuantite < 1) {
+                // Si quantité devient 0, supprimer l'item
+                const deleteForm = itemElement.querySelector('form[asp-action="Supprimer"]');
+                if (deleteForm) {
+                    deleteForm.submit();
+                }
+                return;
+            }
+            
+            // Mettre à jour et soumettre
+            quantiteInput.value = currentQuantite;
+            form.submit();
+        }
+    </script>
+</body>
+</html>

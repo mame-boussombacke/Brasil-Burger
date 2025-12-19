@@ -1,0 +1,77 @@
+@model BrasilBurger.Models.Client
+@{
+    ViewData["Title"] = "Inscription - Brasil Burger";
+}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/css/site.css">
+    <link rel="stylesheet" href="~/css/client.css">
+</head>
+<body class="auth-page">
+    <div class="auth-container">
+        <!-- En-tête -->
+        <div class="auth-header">
+            <h1 class="auth-logo">Brasil Burger</h1>
+            <p class="auth-subtitle">RESTAURANT</p>
+        </div>
+        
+        <!-- Corps -->
+        <div class="auth-body">
+            <h2 class="auth-title">Inscription</h2>
+            <p class="auth-description">Créez votre compte pour commander</p>
+            
+            <!-- Formulaire -->
+            <form asp-action="Register" method="post">
+                <div class="form-group">
+                    <label asp-for="Nom" class="form-label"></label>
+                    <input asp-for="Nom" class="form-control" 
+                        placeholder="Votre nom" required>
+                </div>
+                
+                <div class="form-group">
+                    <label asp-for="Prenom" class="form-label"></label>
+                    <input asp-for="Prenom" class="form-control" 
+                        placeholder="Votre prénom" required>
+                </div>
+                
+                <div class="form-group">
+                    <label asp-for="Email" class="form-label"></label>
+                    <input asp-for="Email" type="email" class="form-control" 
+                        placeholder="exemple@email.com" required>
+                </div>
+                
+                <div class="form-group">
+                    <label asp-for="Telephone" class="form-label"></label>
+                    <input asp-for="Telephone" class="form-control" 
+                        placeholder="Votre téléphone" required>
+                </div>
+                
+                <div class="form-group">
+                    <label asp-for="Password" class="form-label"></label>
+                    <input asp-for="Password" type="password" class="form-control" 
+                        placeholder="Mot de passe" required>
+                </div>
+                
+                <button type="submit" class="btn btn-auth-submit">
+                    Créer un compte
+                </button>
+            </form>
+            
+            <!-- Liens -->
+            <div class="auth-links">
+                <p>Déjà un compte ? 
+                    <a asp-action="Login" class="auth-link">Se connecter</a>
+                </p>
+                <a asp-controller="Home" asp-action="Index" class="btn-back-home">
+                    ← Retour à l'accueil
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,218 @@
+@{
+    ViewData["Title"] = "Configuration - Brasil Burger";
+    var nombrePanier = ViewBag.NombrePanier ?? 0;
+    var totalPanier = ViewBag.TotalPanier ?? 0;
+}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/css/site.css">
+    <link rel="stylesheet" href="~/css/commande.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <a asp-controller="Commande" asp-action="Panier" class="panier-nav">
+        🛒 Panier
+    </a>
+    
+    <!-- En-tête -->
+    <div class="page-header">
+        <h1 class="page-title">Brasil Burger</h1>
+        <p class="page-subtitle">CONFIGURATION COMMANDE</p>
+    </div>
+    
+    <div class="checkout-container">
+        <!-- Étapes -->
+        <div class="checkout-steps">
+            <div class="step active">
+                <div class="step-circle">1</div>
+                <div class="step-label">Configuration</div>
+            </div>
+            <div class="step">
+                <div class="step-circle">2</div>
+                <div class="step-label">Paiement</div>
+            </div>
+            <div class="step">
+                <div class="step-circle">3</div>
+                <div class="step-label">Confirmation</div>
+            </div>
+        </div>
+        
+        <!-- Formulaire -->
+        <form asp-action="Checkout" method="post" class="checkout-form">
+            <!-- Type de service -->
+            <div class="checkout-section">
+                <h3 class="section-title">Type de service</h3>
+                
+                <div class="delivery-options">
+                    <label class="delivery-option" onclick="selectDelivery('SurPlace')">
+                        <input type="radio" name="typeLivraison" value="SurPlace" required>
+                        <div class="delivery-icon">🏠</div>
+                        <span class="delivery-label">Sur place</span>
+                    </label>
+                    
+                    <label class="delivery-option" onclick="selectDelivery('AEmporter')">
+                        <input type="radio" name="typeLivraison" value="AEmporter" required>
+                        <div class="delivery-icon">📦</div>
+                        <span class="delivery-label">À emporter</span>
+                    </label>
+                    
+                    <label class="delivery-option" onclick="selectDelivery('Livraison')">
+                        <input type="radio" name="typeLivraison" value="Livraison" required>
+                        <div class="delivery-icon">🚚</div>
+                        <span class="delivery-label">Livraison</span>
+                    </label>
+                </div>
+            </div>
+            
+            <!-- Zone de livraison -->
+            <div id="zoneSection" class="checkout-section zone-selector">
+                <h3 class="section-title">Zone de livraison</h3>
+                
+                <div class="zone-grid">
+                    <label class="zone-card" onclick="selectZone('Sacré-Coeur', 2000)">
+                        <input type="radio" name="zone" value="Sacré-Coeur">
+                        <div class="zone-name">Sacré-Coeur</div>
+                        <div class="zone-price">2 000 FCFA</div>
+                    </label>
+                    
+                    <label class="zone-card" onclick="selectZone('Almadies', 2500)">
+                        <input type="radio" name="zone" value="Almadies">
+                        <div class="zone-name">Almadies</div>
+                        <div class="zone-price">2 500 FCFA</div>
+                    </label>
+                    
+                    <label class="zone-card" onclick="selectZone('Mermoz', 1800)">
+                        <input type="radio" name="zone" value="Mermoz">
+                        <div class="zone-name">Mermoz</div>
+                        <div class="zone-price">1 800 FCFA</div>
+                    </label>
+                </div>
+            </div>
+            
+            <!-- Adresse de livraison -->
+            <div id="adresseSection" class="checkout-section adresse-field">
+                <h3 class="section-title">Adresse de livraison</h3>
+                
+                <div class="form-group">
+                    <label class="form-label" for="adresse">Adresse complète</label>
+                    <textarea id="adresse" name="adresse" class="form-control" 
+                              rows="3" placeholder="Votre adresse..."></textarea>
+                </div>
+            </div>
+            
+            <!-- Récapitulatif -->
+            <div class="checkout-section">
+                <h3 class="section-title">Récapitulatif</h3>
+                
+                <div class="recap-summary">
+                    <div class="summary-row">
+                        <span class="summary-label">Sous-total</span>
+                        <span class="summary-value" id="subtotal">@totalPanier.ToString("N0") FCFA</span>
+                    </div>
+                    
+                    <div class="summary-row">
+                        <span class="summary-label">Livraison</span>
+                        <span class="summary-value" id="livraisonCost">0 FCFA</span>
+                    </div>
+                    
+                    <div class="summary-row" style="border-top: 2px solid #ddd; padding-top: 1rem;">
+                        <span class="summary-label" style="font-size: 1.2rem;">Total</span>
+                        <span class="summary-total" id="totalAmount">@totalPanier.ToString("N0") FCFA</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Actions -->
+            <div class="checkout-actions">
+                <a asp-action="Panier" class="btn btn-back-panier">
+                    ← Retour au panier
+                </a>
+                
+                <button type="submit" class="btn btn-confirm-checkout">
+                    Passer au paiement →
+                </button>
+            </div>
+        </form>
+    </div>
+    
+    <script>
+        let fraisLivraison = 0;
+        let sousTotal = @totalPanier;
+        
+        function selectDelivery(type) {
+            const zoneSection = document.getElementById('zoneSection');
+            const adresseSection = document.getElementById('adresseSection');
+            
+            document.querySelectorAll('.delivery-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+            
+            if (type === 'Livraison') {
+                zoneSection.classList.add('show');
+                adresseSection.classList.add('show');
+                document.querySelector('textarea[name="adresse"]').required = true;
+            } else {
+                zoneSection.classList.remove('show');
+                adresseSection.classList.remove('show');
+                fraisLivraison = 0;
+                document.querySelector('textarea[name="adresse"]').required = false;
+                updateTotal();
+            }
+        }
+        
+        function selectZone(zone, prix) {
+            document.querySelectorAll('.zone-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+            
+            fraisLivraison = prix;
+            updateTotal();
+        }
+        
+        function updateTotal() {
+            const total = sousTotal + fraisLivraison;
+            
+            document.getElementById('livraisonCost').textContent = 
+                fraisLivraison.toLocaleString() + ' FCFA';
+            document.getElementById('totalAmount').textContent = 
+                total.toLocaleString() + ' FCFA';
+        }
+        
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const typeLivraison = document.querySelector('input[name="typeLivraison"]:checked');
+            
+            if (!typeLivraison) {
+                e.preventDefault();
+                alert('Veuillez sélectionner un type de service');
+                return;
+            }
+            
+            if (typeLivraison.value === 'Livraison') {
+                const zone = document.querySelector('input[name="zone"]:checked');
+                const adresse = document.querySelector('textarea[name="adresse"]');
+                
+                if (!zone) {
+                    e.preventDefault();
+                    alert('Veuillez sélectionner une zone de livraison');
+                    return;
+                }
+                
+                if (!adresse.value.trim()) {
+                    e.preventDefault();
+                    alert('Veuillez saisir votre adresse de livraison');
+                    return;
+                }
+            }
+        });
+        
+        updateTotal();
+    </script>
+</body>
+</html>

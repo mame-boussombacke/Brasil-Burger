@@ -1,0 +1,58 @@
+@{
+    ViewData["Title"] = "Connexion - Brasil Burger";
+}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/css/site.css">
+    <link rel="stylesheet" href="~/css/client.css">
+</head>
+<body class="auth-page">
+    <div class="auth-container">
+        <!-- En-tête -->
+        <div class="auth-header">
+            <h1 class="auth-logo">Brasil Burger</h1>
+            <p class="auth-subtitle">RESTAURANT</p>
+        </div>
+        
+        <!-- Corps -->
+        <div class="auth-body">
+            <h2 class="auth-title">Connexion</h2>
+            <p class="auth-description">Connectez-vous pour commander</p>
+            
+            <!-- Formulaire -->
+            <form asp-action="Login" method="post">
+                <div class="form-group">
+                    <label class="form-label" for="email">Email</label>
+                    <input type="email" id="email" name="email" class="form-control" 
+                           placeholder="Entrez votre email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="password">Mot de passe</label>
+                    <input type="password" id="password" name="password" class="form-control" 
+                           placeholder="Mot de passe" required>
+                </div>
+                
+                <button type="submit" class="btn btn-auth-submit">
+                    Se connecter
+                </button>
+            </form>
+            
+            <!-- Liens -->
+            <div class="auth-links">
+                <p>Pas encore de compte ? 
+                    <a asp-action="Register" class="auth-link">S'inscrire</a>
+                </p>
+                <a asp-controller="Home" asp-action="Index" class="btn-back-home">
+                    ← Retour à l'accueil
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

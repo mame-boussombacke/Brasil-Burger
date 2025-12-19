@@ -1,0 +1,318 @@
+/* client.css - Styles pour les pages Client (Login, Register, Commandes) */
+
+/* Pages d'authentification */
+.auth-page {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #1a1a1a 0%, var(--secondary-color) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.auth-container {
+    background: var(--white);
+    border-radius: 20px;
+    overflow: hidden;
+    width: 100%;
+    max-width: 450px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+}
+
+.auth-header {
+    background: linear-gradient(45deg, var(--primary-color), var(--primary-dark));
+    padding: 2rem;
+    text-align: center;
+    color: var(--white);
+}
+
+.auth-logo {
+    font-size: 2.5rem;
+    font-weight: 900;
+    margin-bottom: 0.5rem;
+    text-shadow: 2px 2px 0 rgba(0,0,0,0.2);
+}
+
+.auth-subtitle {
+    opacity: 0.9;
+    font-size: 0.9rem;
+    letter-spacing: 3px;
+}
+
+.auth-body {
+    padding: 2rem;
+}
+
+.auth-title {
+    font-size: 1.8rem;
+    color: var(--text-dark);
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+.auth-description {
+    color: var(--text-light);
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.btn-auth-submit {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(45deg, var(--primary-color), var(--primary-dark));
+    color: var(--white);
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 1rem;
+}
+
+.btn-auth-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 107, 0, 0.3);
+}
+
+.auth-links {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #eee;
+}
+
+.auth-link {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.auth-link:hover {
+    text-decoration: underline;
+}
+
+.btn-back-home {
+    display: block;
+    text-align: center;
+    margin-top: 1.5rem;
+    color: var(--text-light);
+    text-decoration: none;
+}
+
+.btn-back-home:hover {
+    color: var(--primary-color);
+}
+
+/* Page commandes client */
+.commandes-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+}
+
+.commandes-header {
+    margin-bottom: 2rem;
+}
+
+.commandes-title {
+    font-size: 2rem;
+    color: var(--text-dark);
+    margin-bottom: 0.5rem;
+}
+
+.commandes-subtitle {
+    color: var(--text-light);
+}
+
+/* Table commandes */
+.commandes-table {
+    width: 100%;
+    background: var(--white);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    margin-bottom: 2rem;
+}
+
+.table-header {
+    background: #f8f9fa;
+    padding: 1rem;
+    border-bottom: 2px solid #eee;
+}
+
+.table-row {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr 1fr 1fr;
+    padding: 1rem;
+    border-bottom: 1px solid #eee;
+    align-items: center;
+}
+
+.table-row:hover {
+    background: #f9f9f9;
+}
+
+.table-header .table-row {
+    font-weight: bold;
+    color: var(--text-dark);
+}
+
+.table-cell {
+    padding: 0.5rem;
+}
+
+/* Badges état commande */
+.badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.badge-en-attente {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.badge-validee {
+    background: #d4edda;
+    color: #155724;
+}
+
+.badge-terminee {
+    background: #cce5ff;
+    color: #004085;
+}
+
+.badge-annulee {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+/* Actions commandes */
+.btn-action {
+    padding: 6px 12px;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    text-decoration: none;
+    margin-right: 5px;
+}
+
+.btn-view {
+    background: var(--primary-color);
+    color: var(--white);
+}
+
+.btn-view:hover {
+    background: var(--primary-dark);
+    color: var(--white);
+    text-decoration: none;
+}
+
+.btn-payer {
+    background: #28a745;
+    color: var(--white);
+}
+
+.btn-payer:hover {
+    background: #218838;
+    color: var(--white);
+    text-decoration: none;
+}
+
+/* Détails commande */
+.commande-details {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 2rem;
+    box-shadow: var(--shadow);
+    margin-bottom: 2rem;
+}
+
+.details-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #eee;
+}
+
+.commande-numero {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--text-dark);
+}
+
+.commande-date {
+    color: var(--text-light);
+}
+
+.commande-status {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.commande-items {
+    margin-bottom: 2rem;
+}
+
+.commande-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border-bottom: 1px solid #eee;
+}
+
+.item-name {
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+.item-quantity {
+    color: var(--text-light);
+}
+
+.item-price {
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.commande-total {
+    text-align: right;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: var(--radius);
+}
+
+.total-label {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--text-dark);
+}
+
+.total-amount {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+/* Responsive commandes */
+@media (max-width: 768px) {
+    .table-row {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+    }
+    
+    .commande-details {
+        padding: 1rem;
+    }
+    
+    .details-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+}
