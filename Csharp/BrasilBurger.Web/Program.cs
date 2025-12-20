@@ -12,11 +12,11 @@ Console.WriteLine($"🔧 ConnectionString: {connectionString?.Substring(0, Math.
 
 if (string.IsNullOrEmpty(connectionString))
 {
-    Console.WriteLine("❌ ERREUR: ConnectionString est vide!");
+    Console.WriteLine(" ERREUR: ConnectionString est vide!");
 }
 else
 {
-    Console.WriteLine("✅ ConnectionString chargée");
+    Console.WriteLine(" ConnectionString chargée");
 }
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -38,25 +38,25 @@ builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
-// ✅ CONFIGURATION PORT RENDER
+//  CONFIGURATION PORT RENDER
 var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
 app.Urls.Add($"http://*:{port}");
-Console.WriteLine($"🚀 Port configuré: {port}");
+Console.WriteLine($" Port configuré: {port}");
 
 // ============================================
-// ✅ INITIALISATION DE LA BASE + SEEDDATA
+//  INITIALISATION DE LA BASE + SEEDDATA
 // ============================================
 try
 {
     using (var scope = app.Services.CreateScope())
     {
         var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-        Console.WriteLine("🔄 Initialisation de la base de données...");
+        Console.WriteLine(" Initialisation de la base de données...");
         
         // 1. VÉRIFIER/CREER LES TABLES (sans migrations complexes)
-        Console.WriteLine("📁 Création des tables si nécessaire...");
+        Console.WriteLine(" Création des tables si nécessaire...");
         await dbContext.Database.EnsureCreatedAsync();
-        Console.WriteLine("✅ Tables vérifiées/créées");
+        Console.WriteLine(" Tables vérifiées/créées");
         
         // 2. NETTOYER LES VIEILLES DONNÉES "Test Burger"
         var testBurgers = await dbContext.Burgers
@@ -75,32 +75,32 @@ try
         var menuCount = await dbContext.Menus.CountAsync();
         var complementCount = await dbContext.Complements.CountAsync();
         
-        Console.WriteLine($"📊 État actuel: {burgerCount} burgers, {menuCount} menus, {complementCount} compléments");
+        Console.WriteLine($" État actuel: {burgerCount} burgers, {menuCount} menus, {complementCount} compléments");
         
         // 4. EXÉCUTER SEEDDATA SEULEMENT SI VIDE
         if (burgerCount == 0 && menuCount == 0)
         {
-            Console.WriteLine("🌱 Aucune donnée trouvée, exécution de SeedData...");
+            Console.WriteLine(" Aucune donnée trouvée, exécution de SeedData...");
             try
             {
                 SeedData.Initialize(dbContext);
-                Console.WriteLine("✅ SeedData exécuté avec succès");
+                Console.WriteLine(" SeedData exécuté avec succès");
             }
             catch (Exception seedEx)
             {
-                Console.WriteLine($"❌ Erreur SeedData: {seedEx.Message}");
+                Console.WriteLine($" Erreur SeedData: {seedEx.Message}");
             }
         }
         else
         {
-            Console.WriteLine("ℹ️ Données déjà présentes, SeedData ignoré");
+            Console.WriteLine(" Données déjà présentes, SeedData ignoré");
             
             // DEBUG: Afficher ce qu'il y a
             var burgers = await dbContext.Burgers.ToListAsync();
-            Console.WriteLine("📋 Burgers en base:");
+            Console.WriteLine(" Burgers en base:");
             foreach (var burger in burgers)
             {
-                var status = string.IsNullOrEmpty(burger.ImageUrl) ? "❌ SANS IMAGE" : "✅ AVEC IMAGE";
+                var status = string.IsNullOrEmpty(burger.ImageUrl) ? " SANS IMAGE" : " AVEC IMAGE";
                 Console.WriteLine($"  - {burger.Id}: {burger.Nom} - {status}");
             }
         }
@@ -108,12 +108,12 @@ try
 }
 catch (Exception ex)
 {
-    Console.WriteLine($"❌ Erreur initialisation base: {ex.Message}");
+    Console.WriteLine($" Erreur initialisation base: {ex.Message}");
     Console.WriteLine($"🔍 Détails: {ex.StackTrace}");
 }
 
 // ============================================
-// ✅ MIDDLEWARE
+//  MIDDLEWARE
 // ============================================
 if (!app.Environment.IsDevelopment())
 {
@@ -130,7 +130,7 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 // ============================================
-// ✅ ENDPOINTS DE DIAGNOSTIC
+//  ENDPOINTS DE DIAGNOSTIC
 // ============================================
 app.MapGet("/api/debug", async (ApplicationDbContext db) =>
 {
@@ -191,5 +191,5 @@ app.MapPost("/api/reset", async (ApplicationDbContext db) =>
     }
 });
 
-Console.WriteLine("🚀 Application démarrée avec succès");
+Console.WriteLine(" Application démarrée avec succès");
 await app.RunAsync();
