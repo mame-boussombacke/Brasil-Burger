@@ -5,10 +5,9 @@ using System.Linq;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configuration Neon - UTILISEZ DefaultConnection
+// Configuration Neon
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-// ✅ LOG pour déboguer (retirez après)
 Console.WriteLine($"🔧 ConnectionString: {connectionString?.Substring(0, Math.Min(50, connectionString?.Length ?? 0))}...");
 
 if (string.IsNullOrEmpty(connectionString))
@@ -27,6 +26,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddScoped<IPanierService, PanierService>();
 builder.Services.AddScoped<ICommandeService, CommandeService>();
 builder.Services.AddScoped<IPaiementService, PaiementService>();
+builder.Services.AddScoped<IImageService, ImageService>();
 builder.Services.AddHttpContextAccessor();
 
 // Session
@@ -38,107 +38,158 @@ builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
-// ✅ CONFIGURATION PORT RENDER (ESSENTIEL !)
+// ✅ CONFIGURATION PORT RENDER
 var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
 app.Urls.Add($"http://*:{port}");
 Console.WriteLine($"🚀 Port configuré: {port}");
 
-// ✅ Appliquer les migrations de base de données ou créer la base si elle n'existe pas
+// ============================================
+// ✅ INITIALISATION DE LA BASE + SEEDDATA
+// ============================================
 try
 {
     using (var scope = app.Services.CreateScope())
     {
         var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-        Console.WriteLine("🔄 Vérification de la base de données...");
+        Console.WriteLine("🔄 Initialisation de la base de données...");
         
-        // Vérifier si la base de données peut être connectée
-        if (dbContext.Database.CanConnect())
-        {
-            Console.WriteLine("✅ Connexion à la base de données réussie");
+        // 1. VÉRIFIER/CREER LES TABLES (sans migrations complexes)
+        Console.WriteLine("📁 Création des tables si nécessaire...");
+        await dbContext.Database.EnsureCreatedAsync();
+        Console.WriteLine("✅ Tables vérifiées/créées");
+        
+        // 2. NETTOYER LES VIEILLES DONNÉES "Test Burger"
+        var testBurgers = await dbContext.Burgers
+            .Where(b => b.Nom.Contains("Test") || b.Nom.Contains("ECE") || b.Nom.Contains("Writ"))
+            .ToListAsync();
             
-            // Vérifier si des migrations existent
+        if (testBurgers.Any())
+        {
+            Console.WriteLine($"🧹 Suppression de {testBurgers.Count} vieux burgers de test...");
+            dbContext.Burgers.RemoveRange(testBurgers);
+            await dbContext.SaveChangesAsync();
+        }
+        
+        // 3. COMPTER CE QUI EXISTE
+        var burgerCount = await dbContext.Burgers.CountAsync();
+        var menuCount = await dbContext.Menus.CountAsync();
+        var complementCount = await dbContext.Complements.CountAsync();
+        
+        Console.WriteLine($"📊 État actuel: {burgerCount} burgers, {menuCount} menus, {complementCount} compléments");
+        
+        // 4. EXÉCUTER SEEDDATA SEULEMENT SI VIDE
+        if (burgerCount == 0 && menuCount == 0)
+        {
+            Console.WriteLine("🌱 Aucune donnée trouvée, exécution de SeedData...");
             try
             {
-                var pendingMigrations = dbContext.Database.GetPendingMigrations().ToList();
-                if (pendingMigrations.Any())
-                {
-                    Console.WriteLine($"🔄 Application de {pendingMigrations.Count} migration(s) en attente...");
-                    dbContext.Database.Migrate();
-                    Console.WriteLine("✅ Migrations appliquées avec succès");
-                }
-                else
-                {
-                    Console.WriteLine("✅ Base de données à jour (aucune migration en attente)");
-                    
-                    // Vérifier si les tables existent, sinon les créer
-                    try
-                    {
-                        var databaseCreator = scope.ServiceProvider.GetService<Microsoft.EntityFrameworkCore.Storage.IRelationalDatabaseCreator>();
-                        if (databaseCreator != null && !databaseCreator.HasTables())
-                        {
-                            Console.WriteLine("🔄 Création des tables (aucune migration trouvée)...");
-                            dbContext.Database.EnsureCreated();
-                            Console.WriteLine("✅ Tables créées avec succès");
-                        }
-                        else
-                        {
-                            Console.WriteLine("✅ Tables déjà existantes");
-                        }
-                    }
-                    catch
-                    {
-                        // Si HasTables() échoue, essayer EnsureCreated de toute façon
-                        Console.WriteLine("🔄 Création des tables (vérification HasTables échouée)...");
-                        dbContext.Database.EnsureCreated();
-                        Console.WriteLine("✅ Tables créées avec EnsureCreated");
-                    }
-                }
+                SeedData.Initialize(dbContext);
+                Console.WriteLine("✅ SeedData exécuté avec succès");
             }
-            catch (Exception migrationEx)
+            catch (Exception seedEx)
             {
-                // Si les migrations échouent, essayer EnsureCreated comme fallback
-                Console.WriteLine($"⚠️ Erreur avec les migrations: {migrationEx.Message}");
-                Console.WriteLine("🔄 Tentative de création des tables avec EnsureCreated...");
-                try
-                {
-                    dbContext.Database.EnsureCreated();
-                    Console.WriteLine("✅ Tables créées avec EnsureCreated");
-                }
-                catch (Exception ensureEx)
-                {
-                    Console.WriteLine($"⚠️ Erreur lors de la création des tables: {ensureEx.Message}");
-                }
+                Console.WriteLine($"❌ Erreur SeedData: {seedEx.Message}");
             }
         }
         else
         {
-            Console.WriteLine("⚠️ Impossible de se connecter à la base de données");
+            Console.WriteLine("ℹ️ Données déjà présentes, SeedData ignoré");
+            
+            // DEBUG: Afficher ce qu'il y a
+            var burgers = await dbContext.Burgers.ToListAsync();
+            Console.WriteLine("📋 Burgers en base:");
+            foreach (var burger in burgers)
+            {
+                var status = string.IsNullOrEmpty(burger.ImageUrl) ? "❌ SANS IMAGE" : "✅ AVEC IMAGE";
+                Console.WriteLine($"  - {burger.Id}: {burger.Nom} - {status}");
+            }
         }
     }
 }
 catch (Exception ex)
 {
-    Console.WriteLine($"❌ Erreur lors de la vérification de la base de données: {ex.Message}");
-    Console.WriteLine($"   Stack trace: {ex.StackTrace}");
-    // Ne pas arrêter l'application - elle pourra démarrer même si la DB a des problèmes
+    Console.WriteLine($"❌ Erreur initialisation base: {ex.Message}");
+    Console.WriteLine($"🔍 Détails: {ex.StackTrace}");
 }
 
-// Configure the HTTP request pipeline.
+// ============================================
+// ✅ MIDDLEWARE
+// ============================================
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // HSTS désactivé pour Render (géré par le proxy)
 }
 
-// HTTPS Redirection désactivé pour Render (géré par le proxy)
 app.UseStaticFiles();
 app.UseRouting();
-app.UseSession(); // Doit être après UseRouting
+app.UseSession();
 app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-Console.WriteLine("✅ Application prête à démarrer");
-app.Run();
+// ============================================
+// ✅ ENDPOINTS DE DIAGNOSTIC
+// ============================================
+app.MapGet("/api/debug", async (ApplicationDbContext db) =>
+{
+    var burgers = await db.Burgers.ToListAsync();
+    var menus = await db.Menus
+        .Include(m => m.Burger)
+        .Include(m => m.Frites)
+        .Include(m => m.Boisson)
+        .ToListAsync();
+    
+    return new
+    {
+        Database = db.Database.GetDbConnection().Database,
+        Time = DateTime.UtcNow,
+        Burgers = burgers.Select(b => new {
+            b.Id,
+            b.Nom,
+            b.Prix,
+            b.EstDisponible,
+            b.ImageUrl,
+            HasImage = !string.IsNullOrEmpty(b.ImageUrl)
+        }),
+        Menus = menus.Select(m => new {
+            m.Id,
+            m.Nom,
+            m.PrixTotal,
+            m.EstDisponible,
+            m.ImageUrl,
+            Burger = m.Burger?.Nom,
+            Frites = m.Frites?.Nom,
+            Boisson = m.Boisson?.Nom
+        })
+    };
+});
+
+app.MapPost("/api/reset", async (ApplicationDbContext db) =>
+{
+    try
+    {
+        // Supprimer toutes les données
+        db.Burgers.RemoveRange(db.Burgers);
+        db.Menus.RemoveRange(db.Menus);
+        db.Complements.RemoveRange(db.Complements);
+        
+        await db.SaveChangesAsync();
+        
+        // Ré-exécuter SeedData
+        SeedData.Initialize(db);
+        
+        return Results.Ok(new {
+            success = true,
+            message = "Base réinitialisée! Redémarrez l'application." 
+        });
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem($"Erreur: {ex.Message}");
+    }
+});
+
+Console.WriteLine("🚀 Application démarrée avec succès");
+await app.RunAsync();

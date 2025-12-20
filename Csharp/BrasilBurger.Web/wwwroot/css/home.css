@@ -1,6 +1,23 @@
 /* home.css - Styles spécifiques pour les pages Home */
 
 /* Page d'accueil */
+* {
+        box-sizing: border-box;
+    }
+    body {
+        margin: 0;
+        padding: 0;
+        width: 100vw;
+        overflow-x: hidden;
+        position: relative;
+    }
+    .welcome-container {
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
 .home-page {
     min-height: 100vh;
     background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)),
@@ -37,7 +54,7 @@
 .welcome-title {
     font-size: 3.5rem;
     margin-bottom: 1rem;
-    background: linear-gradient(45deg, var(--primary-color), #FF8C00);
+    background: linear-gradient(45deg, var(--primary-color), #ffd900);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }

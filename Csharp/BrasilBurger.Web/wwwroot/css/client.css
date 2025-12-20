@@ -3,7 +3,7 @@
 /* Pages d'authentification */
 .auth-page {
     min-height: 100vh;
-    background: linear-gradient(135deg, #1a1a1a 0%, var(--secondary-color) 100%);
+    background: linear-gradient(135deg, #3d3d3d 0%, var(--secondary-color) 100%);
     display: flex;
     align-items: center;
     justify-content: center;

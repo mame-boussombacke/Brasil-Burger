@@ -12,6 +12,7 @@
     <title>@ViewData["Title"]</title>
     <link rel="stylesheet" href="~/css/site.css">
     <link rel="stylesheet" href="~/css/home.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 <body>
     <!-- Navigation panier -->
@@ -21,8 +22,10 @@
     
     <!-- En-tête -->
     <div class="page-header">
-        <h1 class="page-title">Brasil Burger</h1>
-        <p class="page-subtitle">RESTAURANT</p>
+        <img src="https://res.cloudinary.com/dzvqqwwjc/image/upload/v1766266553/Brown_Simple_Circle_Restaurant_Logo__1_-removebg-preview_qzjv0l.png"
+        alt="Brasil Burger"
+        class="brand-logo"
+        style="height: auto; width:200px;">
     </div>
     
     <div class="container">
@@ -30,16 +33,16 @@
         <div class="categories-section">
             <h2 class="categories-title">Catégories</h2>
             <div class="categories-filter">
-                <a asp-action="Catalogue" asp-route-type="all" 
-                   class="cat-btn @(ViewBag.TypeFilter == "all" ? "active" : "")">
+                <a asp-action="Catalogue" asp-route-type="all"
+                class="cat-btn @(ViewBag.TypeFilter == "all" ? "active" : "")">
                     Tous
                 </a>
-                <a asp-action="Catalogue" asp-route-type="burgers" 
-                   class="cat-btn @(ViewBag.TypeFilter == "burgers" ? "active" : "")">
+                <a asp-action="Catalogue" asp-route-type="burgers"
+                class="cat-btn @(ViewBag.TypeFilter == "burgers" ? "active" : "")">
                     Burgers
                 </a>
-                <a asp-action="Catalogue" asp-route-type="menus" 
-                   class="cat-btn @(ViewBag.TypeFilter == "menus" ? "active" : "")">
+                <a asp-action="Catalogue" asp-route-type="menus"
+                class="cat-btn @(ViewBag.TypeFilter == "menus" ? "active" : "")">
                     Menus
                 </a>
             </div>
@@ -60,7 +63,7 @@
                                 <div class="product-footer">
                                     <span class="product-price">@burger.Prix.ToString("N0") FCFA</span>
                                     <a asp-action="Details" asp-route-id="@burger.Id" asp-route-type="burger" 
-                                       class="btn-view-details">
+                                    class="btn-view-details">
                                         Voir détails
                                     </a>
                                 </div>
@@ -87,7 +90,7 @@
                                 <div class="product-footer">
                                     <span class="product-price">@burger.Prix.ToString("N0") FCFA</span>
                                     <a asp-action="Details" asp-route-id="@burger.Id" asp-route-type="burger" 
-                                       class="btn-view-details">
+                                    class="btn-view-details">
                                         Voir détails
                                     </a>
                                 </div>

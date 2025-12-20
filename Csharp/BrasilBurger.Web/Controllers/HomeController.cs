@@ -30,41 +30,44 @@ namespace BrasilBurger.Controllers
             ViewBag.TypeFilter = type;
             ViewBag.NombrePanier = _panierService.GetNombreItems();
             
+            // TOUJOURS créer un CatalogueViewModel
+            var viewModel = new CatalogueViewModel();
+            
             if (type == "burgers")
             {
-                var burgers = await _context.Burgers
+                // Charge seulement les burgers
+                viewModel.Burgers = await _context.Burgers
                     .Where(b => b.EstDisponible)
                     .ToListAsync();
-                return View("CatalogueBurgers", burgers);
+                viewModel.Menus = new List<Menu>(); // Liste vide pour menus
             }
             else if (type == "menus")
             {
-                var menus = await _context.Menus
+                // Charge seulement les menus
+                viewModel.Menus = await _context.Menus
                     .Where(m => m.EstDisponible)
                     .Include(m => m.Burger)
                     .Include(m => m.Boisson)
                     .Include(m => m.Frites)
                     .ToListAsync();
-                return View("CatalogueMenus", menus);
+                viewModel.Burgers = new List<Burger>(); // Liste vide pour burgers
             }
             else
             {
-                var viewModel = new CatalogueViewModel
-                {
-                    Burgers = await _context.Burgers
-                        .Where(b => b.EstDisponible)
-                        .Take(6)
-                        .ToListAsync(),
-                    Menus = await _context.Menus
-                        .Where(m => m.EstDisponible)
-                        .Include(m => m.Burger)
-                        .Include(m => m.Boisson)
-                        .Include(m => m.Frites)
-                        .Take(4)
-                        .ToListAsync()
-                };
-                return View(viewModel);
+                // type = "all" - Charge les deux
+                viewModel.Burgers = await _context.Burgers
+                    .Where(b => b.EstDisponible)
+                    .ToListAsync(); // Enlever Take(6) pour montrer tout
+                viewModel.Menus = await _context.Menus
+                    .Where(m => m.EstDisponible)
+                    .Include(m => m.Burger)
+                    .Include(m => m.Boisson)
+                    .Include(m => m.Frites)
+                    .ToListAsync(); // Enlever Take(4) pour montrer tout
             }
+            
+            // TOUJOURS retourner la même vue avec CatalogueViewModel
+            return View("Catalogue", viewModel);
         }
         
         // GET: /Home/Details/{id}

@@ -1,0 +1,94 @@
+@model List<BrasilBurger.Models.Menu>
+@{
+    ViewData["Title"] = "Menus - Brasil Burger";
+    var nombrePanier = ViewBag.NombrePanier ?? 0;
+}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/css/site.css">
+    <link rel="stylesheet" href="~/css/home.css">
+</head>
+<body>
+    <!-- Navigation panier -->
+    <a asp-controller="Commande" asp-action="Panier" class="panier-nav">
+        🛒 Panier <span class="panier-count">@nombrePanier</span>
+    </a>
+    
+    <!-- En-tête -->
+    <div class="page-header">
+        <img src="https://res.cloudinary.com/dzvqqwwjc/image/upload/v1766266553/Brown_Simple_Circle_Restaurant_Logo__1_-removebg-preview_qzjv0l.png"
+        alt="Brasil Burger"
+        class="brand-logo"
+        style="height: 80px; width: auto;max-width: 300px; object-fit: contain;display: block;margin: 0 auto;">
+    </div>
+    
+    <div class="container">
+        <!-- Catégories -->
+        <div class="categories-section">
+            <h2 class="categories-title">Nos Menus</h2>
+            <div class="categories-filter">
+                <a asp-action="Catalogue" asp-route-type="all" 
+                class="cat-btn @(ViewBag.TypeFilter == "all" ? "active" : "")">
+                    Tous les produits
+                </a>
+                <a asp-action="Catalogue" asp-route-type="burgers" 
+                class="cat-btn @(ViewBag.TypeFilter == "burgers" ? "active" : "")">
+                    Burgers seulement
+                </a>
+                <a asp-action="Catalogue" asp-route-type="menus" 
+                class="cat-btn @(ViewBag.TypeFilter == "menus" ? "active" : "")">
+                    Menus seulement
+                </a>
+            </div>
+        </div>
+        
+        <!-- Tous les menus -->
+        @if (Model.Any())
+        {
+            <section class="mt-5">
+                <h3 class="section-title">Tous nos menus</h3>
+                <p class="text-muted mb-4" style="font-size: 1.1rem;">
+                    Découvrez nos menus complets: burger + frites + boisson.
+                </p>
+                
+                <div class="grid grid-3">
+                    @foreach (var menu in Model)
+                    {
+                        <div class="product-card">
+                            <img src="@menu.ImageUrl" alt="@menu.Nom" class="product-image">
+                            <div class="product-info">
+                                <h4 class="product-name">@menu.Nom</h4>
+                                <p class="text-muted small">
+                                    <strong>Contient:</strong> 
+                                    @menu.Burger?.Nom, 
+                                    @menu.Frites?.Nom, 
+                                    @menu.Boisson?.Nom
+                                </p>
+                                <div class="product-footer">
+                                    <span class="product-price">@menu.PrixTotal.ToString("N0") FCFA</span>
+                                    <a asp-action="Details" asp-route-id="@menu.Id" asp-route-type="menu" 
+                                       class="btn-view-details">
+                                        Voir détails
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </section>
+        }
+        else
+        {
+            <div class="text-center py-5">
+                <h4>Aucun menu disponible</h4>
+                <p class="text-muted">Revenez plus tard !</p>
+            </div>
+        }
+    </div>
+</body>
+</html>

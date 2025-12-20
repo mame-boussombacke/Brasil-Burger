@@ -1,4 +1,3 @@
-// Services/CommandeService.cs
 using Microsoft.EntityFrameworkCore;
 using BrasilBurger.Data;
 using BrasilBurger.Models;
@@ -15,8 +14,8 @@ namespace BrasilBurger.Services
         }
         
         public async Task<Commande> CreerCommandeAsync(int clientId, List<PanierItem> panier, 
-                                                       TypeLivraison typeLivraison, 
-                                                       string adresse = null, string zone = null)
+                                                    TypeLivraison typeLivraison,
+                                                    string? adresse = null, string? zone = null)
         {
             if (!panier.Any())
                 throw new ArgumentException("Le panier est vide");
@@ -34,7 +33,7 @@ namespace BrasilBurger.Services
                 TypeLivraison = typeLivraison,
                 AdresseLivraison = typeLivraison == TypeLivraison.Livraison ? adresse : null,
                 ZoneLivraison = typeLivraison == TypeLivraison.Livraison ? zone : null,
-                Total = 0 // Calculé après
+                Total = 0
             };
             
             _context.Commandes.Add(commande);
@@ -42,7 +41,6 @@ namespace BrasilBurger.Services
             
             decimal total = 0;
             
-            // Ajouter lignes commande
             foreach (var item in panier)
             {
                 if (item.TypeProduit == "burger")
@@ -51,7 +49,6 @@ namespace BrasilBurger.Services
                     if (burger == null || !burger.EstDisponible)
                         continue;
                     
-                    // Ligne burger
                     var ligneBurger = new LigneCommande
                     {
                         CommandeId = commande.Id,
@@ -62,7 +59,6 @@ namespace BrasilBurger.Services
                     _context.LigneCommandes.Add(ligneBurger);
                     total += burger.Prix * item.Quantite;
                     
-                    // Lignes pour compléments
                     foreach (var complementId in item.ComplementsIds)
                     {
                         var complement = await _context.Complements.FindAsync(complementId);
@@ -103,7 +99,6 @@ namespace BrasilBurger.Services
                 }
             }
             
-            // Mettre à jour total
             commande.Total = total;
             await _context.SaveChangesAsync();
             
@@ -119,7 +114,6 @@ namespace BrasilBurger.Services
             if (commande == null)
                 throw new ArgumentException("Commande non trouvée");
             
-            // UNE COMMANDE PAYÉE UNE SEULE FOIS
             if (commande.Paiement != null)
                 throw new InvalidOperationException("Cette commande est déjà payée");
             
@@ -130,7 +124,6 @@ namespace BrasilBurger.Services
                 Type = typePaiement
             };
             
-            // Mettre à jour état commande
             commande.Etat = EtatCommande.Validee;
             
             _context.Paiements.Add(paiement);
@@ -148,7 +141,8 @@ namespace BrasilBurger.Services
                 .ToListAsync();
         }
         
-        public async Task<Commande> GetCommandeDetailsAsync(int commandeId, int clientId)
+        // ✅ CORRECTION : Retour nullable ou exception
+        public async Task<Commande?> GetCommandeDetailsAsync(int commandeId, int clientId)
         {
             return await _context.Commandes
                 .Include(c => c.Paiement)

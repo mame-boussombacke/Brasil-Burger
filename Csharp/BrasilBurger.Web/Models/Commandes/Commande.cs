@@ -39,10 +39,10 @@ namespace BrasilBurger.Models
         public TypeLivraison TypeLivraison { get; set; }
         
         [Display(Name = "Adresse livraison")]
-        public string AdresseLivraison { get; set; }
+        public string? AdresseLivraison { get; set; }
         
         [Display(Name = "Zone livraison")]
-        public string ZoneLivraison { get; set; }
+        public string? ZoneLivraison { get; set; }
         
         [Required(ErrorMessage = "Le total est requis")]
         [Range(0.01, 1000000, ErrorMessage = "Le total doit être positif")]
