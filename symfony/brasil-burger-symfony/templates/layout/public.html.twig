@@ -1,15 +1,12 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>{% block title %}Brasil Burger{% endblock %}</title>
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
     <link rel="stylesheet" href="{{ asset('css/public.css') }}">
-</head>
-<body class="public-body">
+{% endblock %}
 
-<div class="public-container">
-    {% block body %}{% endblock %}
-</div>
-
-</body>
-</html>
+{% block body %}
+    <div class="public-container">
+        {% block public_body %}{% endblock %}
+    </div>
+{% endblock %}

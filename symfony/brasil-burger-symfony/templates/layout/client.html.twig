@@ -1,19 +1,14 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>{% block title %}Commander{% endblock %}</title>
+{% extends 'base.html.twig' %}
+
+{% block title %}Commander{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
     <link rel="stylesheet" href="{{ asset('css/client.css') }}">
-    {% block stylesheets %}{% endblock %}
-    {% block javascripts %}{% endblock %}
-</head>
-<body>
-    {% include '_partials/header.html.twig' %}
+{% endblock %}
 
+{% block body %}
     <main class="client-content">
-        {% block body %}{% endblock %}
+        {% block client_body %}{% endblock %}
     </main>
-
-    {% include '_partials/footer.html.twig' %}
-</body>
-</html>
+{% endblock %}

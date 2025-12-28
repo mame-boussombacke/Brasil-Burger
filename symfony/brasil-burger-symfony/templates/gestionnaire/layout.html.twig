@@ -1,26 +1,18 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>{% block title %}Brasil Burger - Gestion{% endblock %}</title>
+{% extends 'base.html.twig' %}
 
-    {# CSS externe #}
+{% block title %}Brasil Burger - Gestion{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
     <link rel="stylesheet" href="{{ asset('css/gestionnaire.css') }}">
-    {% block stylesheets %}{% endblock %}
+{% endblock %}
 
-    {% block javascripts %}{% endblock %}
-</head>
-<body>
-    {% include '_partials/header.html.twig' %}
-
+{% block body %}
     <div class="container">
         {% include '_partials/sidebar.html.twig' %}
 
         <div class="content">
-            {% block body %}{% endblock %}
+            {% block gestionnaire_body %}{% endblock %}
         </div>
     </div>
-
-    {% include '_partials/footer.html.twig' %}
-</body>
-</html>
+{% endblock %}
