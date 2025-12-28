@@ -1,38 +1,37 @@
-# Étape 1 : Image PHP officielle avec extensions nécessaires
-FROM php:8.3-fpm
+# 1️⃣ Image PHP avec Apache
+FROM php:8.3-apache
 
-# Installer les dépendances système et extensions PHP
+# 2️⃣ Installation des extensions PHP nécessaires
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
-    libpq-dev \
-    libzip-dev \
     libicu-dev \
+    libpq-dev \
     zlib1g-dev \
-    && docker-php-ext-install pdo pdo_pgsql intl zip opcache
+    libzip-dev \
+    && docker-php-ext-install intl pdo pdo_pgsql zip opcache
 
-# Installer Composer
+# 3️⃣ Activer Apache mod_rewrite
+RUN a2enmod rewrite
+
+# 4️⃣ Installer Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Définir le répertoire de travail
-WORKDIR /var/www/symfony
+# 5️⃣ Définir le répertoire de travail
+WORKDIR /var/www/html
 
-# Copier uniquement les fichiers composer pour installer les dépendances
-COPY composer.json composer.lock ./
-
-# Installer les dépendances sans les packages de dev
-ENV APP_ENV=prod
-ENV APP_DEBUG=0
-RUN composer install --no-dev --optimize-autoloader
-
-# Copier le reste du projet
+# 6️⃣ Copier les fichiers de l'application
 COPY . .
 
-# Construire le cache Symfony en prod
-RUN php bin/console cache:clear --env=prod --no-debug
+# 7️⃣ Installer les dépendances Symfony
+# Option A : pour prod, sans bundles dev
+RUN composer install --no-dev --optimize-autoloader
 
-# Exposer le port pour PHP-FPM
-EXPOSE 9000
+# 8️⃣ Donner les droits aux dossiers cache et log
+RUN chown -R www-data:www-data var/cache var/log var/sessions
 
-# Commande par défaut
-CMD ["php-fpm"]
+# 9️⃣ Exposer le port Apache
+EXPOSE 80
+
+# 10️⃣ Commande par défaut
+CMD ["apache2-foreground"]
