@@ -1,7 +1,7 @@
-# 1️⃣ Image de base
+# 1. Image PHP avec extensions nécessaires
 FROM php:8.3-fpm
 
-# 2️⃣ Installer les dépendances système et PHP nécessaires
+# 2. Installer les dépendances système et PHP
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
@@ -10,27 +10,31 @@ RUN apt-get update && apt-get install -y \
     zip \
     && docker-php-ext-install pdo pdo_pgsql zip
 
-# 3️⃣ Installer Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+# 3. Installer Composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# 4️⃣ Définir le répertoire de travail
+# 4. Définir le répertoire de travail
 WORKDIR /var/www/symfony
 
-# 5️⃣ Copier les fichiers
+# 5. Copier seulement les fichiers nécessaires pour composer
+COPY composer.json composer.lock ./
+
+# 6. Installer les dépendances PHP sans dev et avec autoload optimisé
+RUN composer install --no-dev --optimize-autoloader
+
+# 7. Copier le reste de l’application
 COPY . .
 
-# 6️⃣ Créer les dossiers nécessaires et ajuster permissions
+# 8. Nettoyer le cache, créer les dossiers var et logs avec permissions correctes
 RUN mkdir -p var/cache var/log var/sessions \
     && chown -R www-data:www-data var/cache var/log var/sessions
 
-# 7️⃣ Installer les dépendances PHP (production)
-RUN composer install --no-dev --optimize-autoloader
+# 9. Mettre l'environnement en production
+ENV APP_ENV=prod
+ENV APP_DEBUG=0
 
-# 8️⃣ Définir l’utilisateur
-USER www-data
+# 10. Exposer le port de PHP-FPM
+EXPOSE 9000
 
-# 9️⃣ Exposer le port (Render utilisera par défaut 8080 pour le web)
-EXPOSE 8080
-
-# 🔟 Commande pour lancer le serveur PHP-FPM
+# 11. Commande par défaut
 CMD ["php-fpm"]
