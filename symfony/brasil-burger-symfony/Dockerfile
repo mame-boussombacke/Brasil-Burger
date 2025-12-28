@@ -1,40 +1,61 @@
-# 1. Image PHP avec extensions nécessaires
-FROM php:8.3-fpm
+# Étape 1 : Builder
+FROM php:8.3-fpm-alpine AS builder
 
-# 2. Installer les dépendances système et PHP
-RUN apt-get update && apt-get install -y \
+# Installer les dépendances système nécessaires
+RUN apk add --no-cache \
+    bash \
     git \
     unzip \
-    libpq-dev \
     libzip-dev \
-    zip \
-    && docker-php-ext-install pdo pdo_pgsql zip
+    oniguruma-dev \
+    icu-dev \
+    curl \
+    openssl \
+    zlib-dev \
+    autoconf \
+    gcc \
+    g++ \
+    make \
+    pkgconf \
+    && docker-php-ext-install intl pdo pdo_mysql pdo_pgsql zip opcache
 
-# 3. Installer Composer
+# Installer Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# 4. Définir le répertoire de travail
-WORKDIR /var/www/symfony
-
-# 5. Copier seulement les fichiers nécessaires pour composer
-COPY composer.json composer.lock ./
-
-# 6. Installer les dépendances PHP sans dev et avec autoload optimisé
-RUN composer install --no-dev --optimize-autoloader
-
-# 7. Copier le reste de l’application
+# Copier le code
+WORKDIR /app
 COPY . .
 
-# 8. Nettoyer le cache, créer les dossiers var et logs avec permissions correctes
+# Installer les dépendances PHP sans dev
+RUN composer install --no-dev --optimize-autoloader --no-interaction
+
+# Générer le cache prod
+RUN php bin/console cache:clear --env=prod --no-debug \
+    && php bin/console cache:warmup --env=prod
+
+# Fix des permissions
 RUN mkdir -p var/cache var/log var/sessions \
-    && chown -R www-data:www-data var/cache var/log var/sessions
+    && chown -R www-data:www-data var
 
-# 9. Mettre l'environnement en production
-ENV APP_ENV=prod
-ENV APP_DEBUG=0
+# Étape 2 : Image finale
+FROM php:8.3-fpm-alpine
 
-# 10. Exposer le port de PHP-FPM
-EXPOSE 9000
+# Installer les extensions PHP nécessaires
+RUN apk add --no-cache \
+    libzip-dev \
+    icu-dev \
+    oniguruma-dev \
+    && docker-php-ext-install intl pdo pdo_mysql pdo_pgsql zip opcache
 
-# 11. Commande par défaut
-CMD ["php-fpm"]
+# Copier les fichiers depuis le builder
+WORKDIR /app
+COPY --from=builder /app /app
+
+# Changer l'utilisateur pour www-data
+USER www-data
+
+# Exposer le port Render
+EXPOSE 10000
+
+# Commande pour démarrer le serveur en prod
+CMD ["php", "-S", "0.0.0.0:10000", "-t", "public"]
