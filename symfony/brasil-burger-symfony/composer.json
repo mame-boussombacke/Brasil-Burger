@@ -91,9 +91,7 @@
         "sort-packages": true
     },
 
-    "scripts": {
-        "start": "php -S 0.0.0.0:10000 -t public"
-    },
+    "scripts": {    },
 
     "conflict": {
         "symfony/symfony": "*"
