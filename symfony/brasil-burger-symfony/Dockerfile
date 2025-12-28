@@ -16,7 +16,9 @@ RUN apk add --no-cache \
     gcc \
     g++ \
     make \
-    pkgconf \
+    pkgconfig \
+    postgresql-dev \
+    mysql-client \
     && docker-php-ext-install intl pdo pdo_mysql pdo_pgsql zip opcache
 
 # Installer Composer
@@ -45,6 +47,8 @@ RUN apk add --no-cache \
     libzip-dev \
     icu-dev \
     oniguruma-dev \
+    postgresql-dev \
+    mysql-client \
     && docker-php-ext-install intl pdo pdo_mysql pdo_pgsql zip opcache
 
 # Copier les fichiers depuis le builder
