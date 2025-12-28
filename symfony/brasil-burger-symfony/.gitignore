@@ -8,6 +8,7 @@
 /var/
 /vendor/
 ###< symfony/framework-bundle ###
+Csharp/
 
 ###> phpunit/phpunit ###
 /phpunit.xml
