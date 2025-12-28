@@ -1,0 +1,71 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tableau de bord{% endblock %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
+{% endblock %}
+
+{% block body %}
+<h1>Statistiques du jour</h1>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <h3>Commandes en cours</h3>
+        <p>{{ stats.commandesEnCours }}</p>
+    </div>
+
+    <div class="stat-card">
+        <h3>Commandes validées</h3>
+        <p>{{ stats.commandesValidees }}</p>
+    </div>
+
+    <div class="stat-card">
+        <h3>Commandes annulées</h3>
+        <p>{{ stats.commandesAnnulees }}</p>
+    </div>
+
+    <div class="stat-card">
+        <h3>Recettes journalières</h3>
+        <p>{{ stats.recettes }} FCFA</p>
+    </div>
+</div>
+
+<h2>Burgers les plus vendus</h2>
+
+<table>
+    <tr>
+        <th>Burger</th>
+        <th>Quantité</th>
+    </tr>
+    {% for burger in stats.burgersPlusVendus %}
+    <tr>
+        <td>{{ burger.nom }}</td>
+        <td>{{ burger.quantite }}</td>
+    </tr>
+    {% else %}
+    <tr>
+        <td colspan="2">Aucune vente aujourd’hui</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<h2>Menus les plus vendus</h2>
+
+<table>
+    <tr>
+        <th>Menu</th>
+        <th>Quantité</th>
+    </tr>
+    {% for menu in stats.menusPlusVendus %}
+    <tr>
+        <td>{{ menu.nom }}</td>
+        <td>{{ menu.quantite }}</td>
+    </tr>
+    {% else %}
+    <tr>
+        <td colspan="2">Aucune vente aujourd’hui</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Compléments{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/complement-list.css') }}">
+{% endblock %}
+
+{% block body %}
+<h1>Liste des compléments</h1>
+
+<a href="{{ path('complement_new') }}" class="btn-add">Ajouter un complément</a>
+
+<table>
+    <thead>
+        <tr>
+            <th>Nom</th>
+            <th>Type</th>
+            <th>Prix</th>
+            <th>Disponible</th>
+            <th>Image</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for complement in complements %}
+        <tr>
+            <td>{{ complement.nom }}</td>
+            <td>{{ complement.type }}</td>
+            <td>{{ complement.prix }}</td>
+            <td>{{ complement.estDisponible ? 'Oui' : 'Non' }}</td>
+            <td>
+                {% if complement.imageUrl %}
+                    <img src="{{ complement.imageUrl }}" width="80">
+                {% endif %}
+            </td>
+        </tr>
+    {% else %}
+        <tr>
+            <td colspan="5">Aucun complément</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

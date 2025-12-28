@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Menu{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/menu-form.css') }}">
+{% endblock %}
+
+{% block body %}
+<h1>Ajouter un menu</h1>
+
+<div class="form-container">
+    {{ form_start(form) }}
+
+        {{ form_row(form.nom) }}
+        {{ form_row(form.estDisponible) }}
+
+        <h3>Burgers inclus</h3>
+        {{ form_row(form.burgers) }}
+
+        {{ form_row(form.imageFile) }}
+
+        <button type="submit" class="btn-save">Enregistrer</button>
+
+    {{ form_end(form) }}
+</div>
+{% endblock %}

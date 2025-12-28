@@ -1,0 +1,15 @@
+<header class="site-header">
+    <div class="container">
+        <a class="logo" href="{{ path('home') }}">
+            <img src="{{ asset('images/Monlogo.png') }}" height="40" alt="Brasil Burger">
+        </a>
+
+        <nav class="main-nav">
+            <a href="{{ path('home') }}" class="{{ active_class('home') }}">Accueil</a>
+            <a href="{{ path('client_index') }}" class="{{ active_class('client') }}">Clients</a>
+            <a href="{{ path('gestionnaire_index') }}" class="{{ active_class('gestionnaire') }}">Gestion</a>
+            <a href="{{ path('menu_index') }}" class="{{ active_class('menu') }}">Menus</a>
+            <a href="{{ path('commande_index') }}" class="{{ active_class('commande') }}">Commandes</a>
+        </nav>
+    </div>
+</header>

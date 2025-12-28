@@ -1,0 +1,20 @@
+.public-body {
+    background: #fff;
+    font-family: Arial, sans-serif;
+}
+
+.public-container {
+    max-width: 400px;
+    margin: 80px auto;
+    text-align: center;
+}
+
+.btn-main {
+    background: #9d0b0b;
+    color: white;
+    padding: 10px;
+    border-radius: 6px;
+    display: block;
+    margin: 10px 0;
+    text-decoration: none;
+}

@@ -1,0 +1,19 @@
+# config/services.yaml
+# Configuration des services de l'application
+
+services:
+    # Active l'autowiring et autoconfiguration pour toutes les classes
+    _defaults:
+        autowire: true      # injection automatique des dépendances
+        autoconfigure: true # enregistre automatiquement les services pour les tags Symfony
+        public: false       # tous les services sont privés par défaut
+
+    # Enregistrement explicite de ton service Cloudinary
+    App\Service\CloudinaryService: ~
+
+    # Import automatique de tous les services dans src/
+    App\:
+        resource: '../src/*'
+        exclude: '../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
+
+# Tu peux ajouter d'autres services personnalisés ici si nécessaire

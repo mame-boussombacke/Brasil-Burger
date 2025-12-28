@@ -1,0 +1,36 @@
+{% extends 'layout/client.html.twig' %}
+
+{% block title %}Clients{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/client-list.css') }}">
+{% endblock %}
+
+{% block body %}
+<h1>Liste des clients</h1>
+
+<table>
+    <thead>
+        <tr>
+            <th>Nom</th>
+            <th>Prénom</th>
+            <th>Téléphone</th>
+            <th>Email</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for client in clients %}
+        <tr>
+            <td>{{ client.nom }}</td>
+            <td>{{ client.prenom }}</td>
+            <td>{{ client.telephone }}</td>
+            <td>{{ client.email }}</td>
+        </tr>
+    {% else %}
+        <tr>
+            <td colspan="4">Aucun client</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

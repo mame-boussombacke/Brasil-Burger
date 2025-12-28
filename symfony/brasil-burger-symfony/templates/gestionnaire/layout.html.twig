@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Brasil Burger - Gestion{% endblock %}</title>
+
+    {# CSS externe #}
+    <link rel="stylesheet" href="{{ asset('css/gestionnaire.css') }}">
+    {% block stylesheets %}{% endblock %}
+
+    {% block javascripts %}{% endblock %}
+</head>
+<body>
+    {% include '_partials/header.html.twig' %}
+
+    <div class="container">
+        {% include '_partials/sidebar.html.twig' %}
+
+        <div class="content">
+            {% block body %}{% endblock %}
+        </div>
+    </div>
+
+    {% include '_partials/footer.html.twig' %}
+</body>
+</html>
