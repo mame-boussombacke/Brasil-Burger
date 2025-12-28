@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: brasil-burger-app
+    env: php
+    region: frankfurt
+    rootDir: symfony/brasil-burger-symfony
+    buildCommand: |
+      cd symfony/brasil-burger-symfony
+      composer install --no-dev --optimize-autoloader
+      php bin/console cache:clear
+    startCommand: cd symfony/brasil-burger-symfony && php -S 0.0.0.0:$PORT -t public
+    healthCheckPath: /health
+    envVars:
+      - key: APP_ENV
+        value: prod
+      - key: APP_SECRET
+        generateValue: true
