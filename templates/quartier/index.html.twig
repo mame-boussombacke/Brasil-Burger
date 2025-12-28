@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Quartiers{% endblock %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ asset('css/quartier-list.css') }}">
+{% endblock %}
+
+{% block body %}
+<h1>Quartiers</h1>
+
+<table>
+    <tr>
+        <th>Nom</th>
+        <th>Zone</th>
+    </tr>
+    {% for quartier in quartiers %}
+    <tr>
+        <td>{{ quartier.nom }}</td>
+        <td>{{ quartier.zone.nom }}</td>
+    </tr>
+    {% else %}
+    <tr>
+        <td colspan="2">Aucun quartier</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

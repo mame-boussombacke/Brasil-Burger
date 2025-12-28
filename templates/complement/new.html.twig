@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Complément{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/complement-form.css') }}">
+{% endblock %}
+
+{% block body %}
+<h1>Ajouter un complément</h1>
+
+<div class="form-container">
+    {{ form_start(form) }}
+
+        {{ form_row(form.nom) }}
+        {{ form_row(form.type) }}
+        {{ form_row(form.prix) }}
+        {{ form_row(form.estDisponible) }}
+        {{ form_row(form.imageFile) }}
+
+        <button type="submit" class="btn-save">Enregistrer</button>
+
+    {{ form_end(form) }}
+</div>
+{% endblock %}

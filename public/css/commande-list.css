@@ -1,0 +1,36 @@
+h1 {
+    margin-bottom: 15px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.status {
+    padding: 4px 8px;
+    border-radius: 4px;
+    color: white;
+    font-size: 13px;
+}
+
+.status.en_cours {
+    background-color: orange;
+}
+
+.status.validee {
+    background-color: green;
+}
+
+.status.annulee {
+    background-color: red;
+}
+
+.status.terminee {
+    background-color: #007bff;
+}

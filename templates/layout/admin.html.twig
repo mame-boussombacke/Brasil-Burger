@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
+</head>
+<body>
+
+<div class="admin-layout">
+    <aside class="admin-sidebar">
+        <h3>Brasil Burger</h3>
+        <ul>
+            <li><a href="#">Dashboard</a></li>
+            <li><a href="#">Burgers</a></li>
+            <li><a href="#">Menus</a></li>
+            <li><a href="#">Compléments</a></li>
+            <li><a href="#">Commandes</a></li>
+            <li><a href="#">Clients</a></li>
+        </ul>
+    </aside>
+
+    <main class="admin-content">
+        {% block body %}{% endblock %}
+    </main>
+</div>
+
+</body>
+</html>

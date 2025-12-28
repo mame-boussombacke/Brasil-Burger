@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestionnaires{% endblock %}
+
+{% block body %}
+<h1>Liste des gestionnaires</h1>
+
+<ul>
+    {% for gestionnaire in gestionnaires %}
+        <li>{{ gestionnaire.nom }} {{ gestionnaire.prenom }}</li>
+    {% else %}
+        <li>Aucun gestionnaire trouvé</li>
+    {% endfor %}
+</ul>
+{% endblock %}

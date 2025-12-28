@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Menus{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/menu.css') }}">
+{% endblock %}
+
+{% block body %}
+<h1>Liste des menus</h1>
+
+<a href="{{ path('menu_new') }}" class="btn-add">Ajouter un menu</a>
+
+<table>
+    <thead>
+        <tr>
+            <th>Image</th>
+            <th>Nom</th>
+            <th>Burgers</th>
+            <th>Disponible</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for menu in menus %}
+        <tr>
+            <td>
+                {% if menu.imageUrl %}
+                    <img src="{{ menu.imageUrl }}" alt="{{ menu.nom }}">
+                {% endif %}
+            </td>
+            <td>{{ menu.nom }}</td>
+            <td>
+                {% for burger in menu.burgers %}
+                    {{ burger.nom }}{% if not loop.last %}, {% endif %}
+                {% endfor %}
+            </td>
+            <td>
+                {{ menu.estDisponible ? 'Oui' : 'Non' }}
+            </td>
+            <td>
+                <a href="{{ path('menu_edit', {id: menu.id}) }}">Modifier</a>
+                <a href="{{ path('menu_delete', {id: menu.id}) }}"
+                   onclick="return confirm('Supprimer ce menu ?')">
+                   Supprimer
+                </a>
+            </td>
+        </tr>
+    {% else %}
+        <tr>
+            <td colspan="5">Aucun menu trouvé</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

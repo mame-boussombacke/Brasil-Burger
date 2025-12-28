@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Commander{% endblock %}</title>
+    <link rel="stylesheet" href="{{ asset('css/client.css') }}">
+    {% block stylesheets %}{% endblock %}
+    {% block javascripts %}{% endblock %}
+</head>
+<body>
+    {% include '_partials/header.html.twig' %}
+
+    <main class="client-content">
+        {% block body %}{% endblock %}
+    </main>
+
+    {% include '_partials/footer.html.twig' %}
+</body>
+</html>

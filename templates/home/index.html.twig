@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Brasil Burger{% endblock %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ asset('css/home.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="home-container">
+    <div class="home-card">
+        <img src="{{ asset('images/Monlogo.png') }}" alt="Brasil Burger" class="logo">
+
+        <h1>Brasil Burger</h1>
+        <p>Gestion des commandes & livraisons</p>
+
+        <a href="{{ path('dashboard') }}" class="btn btn-primary">
+            Accéder au Dashboard
+        </a>
+    </div>
+</div>
+{% endblock %}

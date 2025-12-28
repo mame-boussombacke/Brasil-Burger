@@ -1,0 +1,50 @@
+{% extends 'gestionnaire/layout.html.twig' %}
+
+{% block title %}Burgers{% endblock %}
+
+{% block body %}
+
+<h1>🍔 Liste des burgers</h1>
+
+<a href="{{ path('burger_new') }}">➕ Ajouter un burger</a>
+
+<div class="card">
+    <table>
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Nom</th>
+                <th>Prix (FCFA)</th>
+                <th>Disponible</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for burger in burgers %}
+            <tr>
+                <td>
+                    {% if burger.imageUrl %}
+                        <img src="{{ burger.imageUrl }}" width="80">
+                    {% else %}
+                        —
+                    {% endif %}
+                </td>
+                <td>{{ burger.nom }}</td>
+                <td>{{ burger.prix }}</td>
+                <td>{{ burger.estDisponible ? 'Oui' : 'Non' }}</td>
+                <td>
+                    <a href="{{ path('burger_edit', {'id': burger.id}) }}">✏️</a>
+                    <a href="{{ path('burger_delete', {'id': burger.id}) }}"
+                       onclick="return confirm('Supprimer ce burger ?')">🗑️</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">Aucun burger enregistré</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

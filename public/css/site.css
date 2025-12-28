@@ -1,0 +1,36 @@
+/* Site common styling aligned with existing design tokens */
+/* Font & base */
+body { font-family: Arial, Helvetica, sans-serif; margin:0; padding:0; background: #f7f7f7; color: #333; }
+.container { max-width: 1100px; margin: 0 auto; padding: 0 16px; }
+
+/* Header */
+.site-header { background: #fff; border-bottom: 1px solid #e6e6e6; position: relative; z-index: 1000; }
+.site-header .container { display:flex; align-items:center; justify-content:space-between; padding: 12px 0; }
+.site-header .logo img { display:block;width: 150px; }
+.site-header .main-nav a { margin-left: 16px; text-decoration: none; color: #333; font-weight: 600; }
+.site-header .main-nav a.active { font-weight: 700; color: #9d0b0b; }
+
+/* Footer */
+.site-footer { background:#fff; border-top:1px solid #e6e6e6; padding: 12px 0; text-align:center; margin-top: 24px; color: #666; }
+
+/* Sidebar (admin) - keep in sync with gestionnaire.css */
+.sidebar { width: 220px; padding: 20px; background-color: #E0B000; min-height: 100vh; }
+.sidebar h2 { text-align:center; margin-bottom: 20px; }
+.sidebar nav a { display:block; padding:8px 0; color:#000; text-decoration:none; font-weight:bold; }
+.sidebar nav a.active { text-decoration: underline; color: #000; }
+
+/* Content */
+.content { padding: 30px; }
+
+/* Client layout */
+.client-content { padding: 20px; }
+
+/* Utilities */
+.btn-main { background: #9d0b0b; color: white; padding: 10px 14px; border-radius: 6px; text-decoration: none; display: inline-block; }
+.btn-main:hover { opacity: .95; }
+
+/* Small responsive tweaks */
+@media (max-width: 768px) {
+  .site-header .container { flex-direction: column; align-items:flex-start }
+  .sidebar { display: none; }
+}

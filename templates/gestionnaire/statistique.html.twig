@@ -1,0 +1,79 @@
+{% extends 'gestionnaire/layout.html.twig' %}
+
+{% block title %}Statistiques{% endblock %}
+
+{% block body %}
+
+<h1>📊 Statistiques du jour</h1>
+
+<div class="stats">
+    <div class="stat-box">
+        <h3>Commandes en cours</h3>
+        <p>{{ commandesEnCours|length }}</p>
+    </div>
+
+    <div class="stat-box">
+        <h3>Commandes validées</h3>
+        <p>{{ commandesValidees|length }}</p>
+    </div>
+
+    <div class="stat-box">
+        <h3>Commandes annulées</h3>
+        <p>{{ commandesAnnulees|length }}</p>
+    </div>
+
+    <div class="stat-box">
+        <h3>Recettes du jour</h3>
+        <p>{{ recettesJour }} FCFA</p>
+    </div>
+</div>
+
+<div class="card">
+    <h2>🍔 Burgers les plus vendus</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Burger</th>
+                <th>Quantité</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for burger in topBurgers %}
+            <tr>
+                <td>{{ burger.nom }}</td>
+                <td>{{ burger.totalVendu }}</td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="2">Aucune vente</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <h2>🍽 Menus les plus vendus</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Menu</th>
+                <th>Quantité</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for menu in topMenus %}
+            <tr>
+                <td>{{ menu.nom }}</td>
+                <td>{{ menu.totalVendu }}</td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="2">Aucune vente</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends 'gestionnaire/layout.html.twig' %}
+
+{% block title %}Burger{% endblock %}
+
+{% block body %}
+
+<h1>➕ Ajouter un burger</h1>
+
+<div class="card">
+    {{ form_start(form) }}
+
+        {{ form_row(form.nom) }}
+        {{ form_row(form.prix) }}
+        {{ form_row(form.estDisponible) }}
+        {{ form_row(form.image) }}
+
+        <button type="submit">Enregistrer</button>
+
+    {{ form_end(form) }}
+</div>
+
+{% endblock %}
