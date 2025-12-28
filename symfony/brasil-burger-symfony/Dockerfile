@@ -1,34 +1,38 @@
-# Utiliser une image PHP avec Apache
-FROM php:8.3-apache
+# Étape 1 : Image PHP officielle avec extensions nécessaires
+FROM php:8.3-fpm
 
-# Installer les extensions PHP nécessaires pour Symfony et PostgreSQL
+# Installer les dépendances système et extensions PHP
 RUN apt-get update && apt-get install -y \
-    libpq-dev \
-    unzip \
     git \
-    curl \
-    && docker-php-ext-install pdo pdo_pgsql
-
-# Activer le module rewrite pour Symfony
-RUN a2enmod rewrite
+    unzip \
+    libpq-dev \
+    libzip-dev \
+    libicu-dev \
+    zlib1g-dev \
+    && docker-php-ext-install pdo pdo_pgsql intl zip opcache
 
 # Installer Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Copier tout le projet dans le conteneur
-COPY . /var/www/html/
-
 # Définir le répertoire de travail
-WORKDIR /var/www/html
+WORKDIR /var/www/symfony
 
-# Installer les dépendances Symfony sans les dev et optimiser l'autoload
+# Copier uniquement les fichiers composer pour installer les dépendances
+COPY composer.json composer.lock ./
+
+# Installer les dépendances sans les packages de dev
+ENV APP_ENV=prod
+ENV APP_DEBUG=0
 RUN composer install --no-dev --optimize-autoloader
 
-# Permissions pour cache/logs
-RUN chown -R www-data:www-data /var/www/html/var
+# Copier le reste du projet
+COPY . .
 
-# Exposer le port 80 pour le serveur Apache
-EXPOSE 80
+# Construire le cache Symfony en prod
+RUN php bin/console cache:clear --env=prod --no-debug
 
-# Commande pour démarrer Apache en mode foreground
-CMD ["apache2-foreground"]
+# Exposer le port pour PHP-FPM
+EXPOSE 9000
+
+# Commande par défaut
+CMD ["php-fpm"]
