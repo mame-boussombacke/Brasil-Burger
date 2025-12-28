@@ -1,1 +1,4 @@
 "Csharp/" 
+Csharp/
+**/bin/
+**/obj/
