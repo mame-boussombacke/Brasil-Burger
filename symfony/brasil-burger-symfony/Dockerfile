@@ -1,37 +1,36 @@
-# 1️⃣ Image PHP avec Apache
-FROM php:8.3-apache
+# 1️⃣ Image de base
+FROM php:8.3-fpm
 
-# 2️⃣ Installation des extensions PHP nécessaires
+# 2️⃣ Installer les dépendances système et PHP nécessaires
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
-    libicu-dev \
     libpq-dev \
-    zlib1g-dev \
     libzip-dev \
-    && docker-php-ext-install intl pdo pdo_pgsql zip opcache
+    zip \
+    && docker-php-ext-install pdo pdo_pgsql zip
 
-# 3️⃣ Activer Apache mod_rewrite
-RUN a2enmod rewrite
+# 3️⃣ Installer Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# 4️⃣ Installer Composer
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+# 4️⃣ Définir le répertoire de travail
+WORKDIR /var/www/symfony
 
-# 5️⃣ Définir le répertoire de travail
-WORKDIR /var/www/html
-
-# 6️⃣ Copier les fichiers de l'application
+# 5️⃣ Copier les fichiers
 COPY . .
 
-# 7️⃣ Installer les dépendances Symfony
-# Option A : pour prod, sans bundles dev
+# 6️⃣ Créer les dossiers nécessaires et ajuster permissions
+RUN mkdir -p var/cache var/log var/sessions \
+    && chown -R www-data:www-data var/cache var/log var/sessions
+
+# 7️⃣ Installer les dépendances PHP (production)
 RUN composer install --no-dev --optimize-autoloader
 
-# 8️⃣ Donner les droits aux dossiers cache et log
-RUN chown -R www-data:www-data var/cache var/log var/sessions
+# 8️⃣ Définir l’utilisateur
+USER www-data
 
-# 9️⃣ Exposer le port Apache
-EXPOSE 80
+# 9️⃣ Exposer le port (Render utilisera par défaut 8080 pour le web)
+EXPOSE 8080
 
-# 10️⃣ Commande par défaut
-CMD ["apache2-foreground"]
+# 🔟 Commande pour lancer le serveur PHP-FPM
+CMD ["php-fpm"]
