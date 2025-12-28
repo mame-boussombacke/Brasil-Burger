@@ -91,7 +91,10 @@
         "sort-packages": true
     },
 
-    "scripts": {    },
+    "scripts": {
+        "post-install-cmd": [],
+        "post-update-cmd": []
+    },
 
     "conflict": {
         "symfony/symfony": "*"
